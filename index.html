@@ -207,7 +207,7 @@ body::before{
   display:block;
   filter:brightness(.95) contrast(1.05);
 }
-.product-right-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgba(200,241,53,.04) 0%, transparent 70%);}
+.product-right-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgb(0, 0, 0) 0%, transparent 70%);}
 /* BLUE accent ring behind product image */
 .product-right-ring{
   position:absolute;width:380px;height:380px;border-radius:50%;
@@ -222,7 +222,7 @@ body::before{
   padding:.4rem 1rem;
   /* BLUE accent badge */
   border:1px solid var(--blue);color:var(--blue);
-  background:rgba(75,75,255,.06);
+  background:rgb(0, 0, 0);
 }
 
 .section-tag{
@@ -479,7 +479,7 @@ footer{
 <nav id="nav">
   <div class="nav-logo">
     <div class="logo-img-slot">
-      <img src="zone_2_logo" alt="ZONE 2" class="logo-img"
+      <img src="zone_2_logo""
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
       <span class="logo-fallback">ZO<em>N</em>E 2</span>
     </div>
