@@ -68,7 +68,17 @@ body::before{
 }
 .nav-logo{display:flex;align-items:center;}
 .logo-img-slot{height:36px;display:flex;align-items:center;}
-.logo-img{height:36px;width:auto;display:block;opacity:1;}
+.logo-img{
+  height:36px;width:auto;display:block;
+
+  opacity:1;
+}
+.logo-fallback{
+  display:none;
+  font-family:var(--font-d);font-size:1.4rem;font-weight:900;
+  letter-spacing:.14em;color:var(--white);
+}
+.logo-fallback em{color:var(--lime);font-style:normal;}
 
 /* ─── HERO ─── */
 .hero{
@@ -96,6 +106,14 @@ body::before{
   padding:0 3rem 5rem;
   max-width:1100px;width:100%;
 }
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--font-d);font-size:.72rem;font-weight:700;
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--lime);margin-bottom:1.6rem;
+  opacity:0;animation:fadeup .7s .3s forwards;
+}
+.hero-eyebrow::before{content:'';display:block;width:30px;height:1px;background:var(--lime);}
 .hero-title{
   font-family:var(--font-d);font-size:clamp(5rem,13vw,11rem);
   font-weight:900;line-height:.88;letter-spacing:-.01em;
@@ -147,28 +165,34 @@ body::before{
 }
 @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-/* ─── SECTION DIVIDER ─── */
-.section-divider{
-  width:100%;height:1px;
-  background:var(--border);
+/* ACCENT TICKER — blue stripe below main ticker */
+.ticker-accent{
+  overflow:hidden;padding:.45rem 0;
+  background:var(--blue);
+  border-top:1px solid rgba(255,255,255,.08);
 }
+.ticker-accent .ticker-track{animation-duration:35s;animation-direction:reverse;}
+.ticker-accent .ticker-item{color:rgba(255,255,255,.7);font-size:.68rem;letter-spacing:.22em;}
 
 /* ─── STATS ─── */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);}
 .stat{padding:3.5rem 3rem;border-right:1px solid var(--border);position:relative;overflow:hidden;}
 .stat:last-child{border-right:none;}
+/* BLUE accent left border on hover */
 .stat{transition:border-color .4s;}
 .stat-num{font-family:var(--font-d);font-size:clamp(3.5rem,5.5vw,5.5rem);font-weight:900;line-height:.9;color:var(--white);}
 .stat-num sup{font-size:.45em;vertical-align:super;color:var(--lime);}
 .stat-label{margin-top:.7rem;font-family:var(--font-d);font-size:.72rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--off);}
 .stat-body{margin-top:.8rem;font-size:.8rem;color:#555;line-height:1.6;max-width:200px;}
-.stat-bar{position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--lime);transition:width 1.2s cubic-bezier(.22,1,.36,1);}
+/* FIX: stat-bar now uses blue */
+.stat-bar{position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--blue);transition:width 1.2s cubic-bezier(.22,1,.36,1);}
 .stat.visible .stat-bar{width:100%;}
 
 /* ─── PRODUCT ─── */
 .product{display:grid;grid-template-columns:1fr 1fr;min-height:80vh;border-bottom:1px solid var(--border);}
 .product-left{padding:6rem 3rem;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);}
 .product-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0d0d0c;}
+/* FIX: product image — proper display, no broken attributes */
 .product-img-wrap{
   width:75%;max-width:460px;
   aspect-ratio:3/4;
@@ -183,11 +207,12 @@ body::before{
   display:block;
   filter:brightness(.95) contrast(1.05);
 }
-.product-right-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgba(200,241,53,.04) 0%, transparent 70%);}
+.product-right-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgb(0, 0, 0) 0%, transparent 70%);}
+/* BLUE accent ring behind product image */
 .product-right-ring{
   position:absolute;width:380px;height:380px;border-radius:50%;
-  border:1px solid rgba(75,75,255,.12);
-  box-shadow:0 0 60px rgba(75,75,255,.06);
+  border:1px solid rgb(0, 0, 0);
+  box-shadow:0 0 60px rgba(0, 0, 0, 0);
   z-index:1;
 }
 .product-badge-wrap{position:absolute;top:2rem;right:2rem;z-index:3;}
@@ -195,8 +220,9 @@ body::before{
   font-family:var(--font-d);font-size:.75rem;font-weight:700;
   letter-spacing:.2em;text-transform:uppercase;
   padding:.4rem 1rem;
+  /* BLUE accent badge */
   border:1px solid var(--blue);color:var(--blue);
-  background:rgba(75,75,255,.06);
+  background:rgb(0, 0, 0);
 }
 
 .section-tag{
@@ -234,6 +260,7 @@ body::before{
   display:flex;flex-direction:column;
 }
 .flavor:hover{background:#0e0e0d;}
+
 .flavor-img-wrap{
   width:100%;height:160px;
   overflow:hidden;position:relative;flex-shrink:0;
@@ -247,7 +274,15 @@ body::before{
   transform:scale(1.05);
   filter:grayscale(.5) contrast(1.1) brightness(.75);
 }
+.flavor-img-ph{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:#2a2a28;background:#0a0a09;
+}
+
 .flavor-body{padding:1.4rem 1.8rem 1.8rem;}
+
 .flavor-accent{
   position:absolute;bottom:0;left:0;right:0;
   height:2px;transform:scaleX(0);transform-origin:left;
@@ -256,11 +291,15 @@ body::before{
 .flavor:hover .flavor-accent{transform:scaleX(1);}
 .f-mango .flavor-accent{background:var(--lime);}
 .f-lychee .flavor-accent{background:#e8dfc8;}
+/* BLUE accent on berry instead of red */
 .f-berry .flavor-accent{background:var(--blue);}
+
 .flavor-dot{width:22px;height:22px;border-radius:50%;margin-bottom:.9rem;}
 .f-mango .flavor-dot{background:var(--lime);box-shadow:0 0 14px rgba(200,241,53,.3);}
 .f-lychee .flavor-dot{background:#e8dfc8;box-shadow:0 0 14px rgba(232,223,200,.2);}
+/* BLUE dot for berry */
 .f-berry .flavor-dot{background:var(--blue);box-shadow:0 0 14px rgba(75,75,255,.3);}
+
 .flavor-name{font-family:var(--font-d);font-size:1.6rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.3rem;}
 .flavor-desc{font-size:.78rem;color:var(--off);line-height:1.6;}
 .flavor-pill{
@@ -274,9 +313,12 @@ body::before{
 /* ─── HOW IT WORKS ─── */
 .how{padding:7rem 3rem;border-bottom:1px solid var(--border);max-width:1200px;margin:0 auto;}
 .steps{margin-top:4.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:3rem;}
-.step{position:relative;padding-top:1.2rem;}
+.step{position:relative;}
+/* BLUE on step number hover */
 .step-num{font-family:var(--font-d);font-size:5rem;font-weight:900;line-height:1;color:#151513;transition:color .4s;}
 .step:hover .step-num{color:var(--blue);}
+/* BLUE accent top border */
+.step{padding-top:1.2rem;transition:border-color .4s;}
 .step-connector{position:absolute;top:2.4rem;right:-1.5rem;width:3rem;height:1px;background:linear-gradient(to right,rgba(255,255,255,.07),transparent);}
 .step:last-child .step-connector{display:none;}
 .step-title{font-family:var(--font-d);font-size:1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:.9rem;}
@@ -292,6 +334,8 @@ body::before{
   display:flex;flex-direction:column;
 }
 .s-card:hover{background:#0e0e0d;}
+
+/* Image container — identical to flavor-img-wrap */
 .s-img-wrap{
   width:100%;height:160px;
   overflow:hidden;position:relative;flex-shrink:0;
@@ -312,6 +356,8 @@ body::before{
   font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#2a2a28;
 }
 .s-img-ph-active .s-img-label{display:flex;}
+
+/* Body — identical to flavor-body */
 .s-body{padding:1.4rem 1.8rem 1.8rem;}
 .s-quote{font-size:.82rem;color:var(--off);line-height:1.75;font-style:italic;margin-bottom:.9rem;}
 .s-author{margin-top:1rem;display:flex;align-items:center;gap:.9rem;}
@@ -370,7 +416,8 @@ body::before{
   width:280px;outline:none;transition:border-color .2s;backdrop-filter:blur(8px);
 }
 .cta-input::placeholder{color:#353532;}
-.cta-input:focus{border-color:rgba(200,241,53,.4);}
+/* BLUE focus ring */
+.cta-input:focus{border-color:var(--blue);}
 .cta-btn{
   padding:.95rem 2rem;background:var(--lime);color:var(--black);
   border:none;font-family:var(--font-d);font-size:.92rem;font-weight:700;
@@ -379,7 +426,7 @@ body::before{
 .cta-btn:hover{background:#d9ff42;}
 .cta-msg{margin-top:.8rem;font-family:var(--font-d);font-size:.78rem;letter-spacing:.08em;color:var(--lime);opacity:0;transition:opacity .4s;}
 
-/* ─── FOOTER ─── */
+/* ─── FOOTER — FIXED ─── */
 footer{
   padding:2.2rem 3rem;
   border-top:1px solid var(--border);
@@ -428,6 +475,7 @@ footer{
 <div id="cur"></div>
 <div id="cring"></div>
 
+<!-- ══ NAV — FIXED: proper closing tag ══ -->
 <nav id="nav">
   <div class="nav-logo">
     <div class="logo-img-slot">
@@ -485,11 +533,26 @@ footer{
   </div>
 </div>
 
-<!-- thin section divider replacing blue ticker -->
-<div class="section-divider"></div>
+<!-- BLUE accent ticker below main -->
+<div class="ticker-accent" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">DUAL CARB FORMULA</span><span class="ticker-item">·</span>
+    <span class="ticker-item">ANHYDROUS CAFFEINE</span><span class="ticker-item">·</span>
+    <span class="ticker-item">NO GUT ROT</span><span class="ticker-item">·</span>
+    <span class="ticker-item">ZERO MESS</span><span class="ticker-item">·</span>
+    <span class="ticker-item">HEAT STABLE</span><span class="ticker-item">·</span>
+    <span class="ticker-item">LAUNCHING HYDERABAD</span><span class="ticker-item">·</span>
+    <span class="ticker-item">DUAL CARB FORMULA</span><span class="ticker-item">·</span>
+    <span class="ticker-item">ANHYDROUS CAFFEINE</span><span class="ticker-item">·</span>
+    <span class="ticker-item">NO GUT ROT</span><span class="ticker-item">·</span>
+    <span class="ticker-item">ZERO MESS</span><span class="ticker-item">·</span>
+    <span class="ticker-item">HEAT STABLE</span><span class="ticker-item">·</span>
+    <span class="ticker-item">LAUNCHING HYDERABAD</span><span class="ticker-item">·</span>
+  </div>
+</div>
 
 
-<!-- ══ STATS ══ -->
+<!-- ══ STATS — carbs updated to 24g ══ -->
 <section class="stats" id="stats">
   <div class="stat reveal">
     <div class="stat-num">24<sup>g</sup></div>
@@ -546,6 +609,7 @@ footer{
     <p style="color:var(--off);max-width:220px;font-size:.82rem;line-height:1.7;">Same formula. Different fire.</p>
   </div>
   <div class="flavors-grid">
+
     <div class="flavor f-mango reveal">
       <div class="flavor-img-wrap">
         <img src="mango.jpg" alt="Mango"/>
@@ -558,6 +622,7 @@ footer{
       </div>
       <div class="flavor-accent"></div>
     </div>
+
     <div class="flavor f-lychee reveal">
       <div class="flavor-img-wrap">
         <img src="lychee.jpg" alt="Lychee"/>
@@ -570,6 +635,7 @@ footer{
       </div>
       <div class="flavor-accent"></div>
     </div>
+
     <div class="flavor f-berry reveal">
       <div class="flavor-img-wrap">
         <img src="berry.jpg" alt="Berry"/>
@@ -582,6 +648,7 @@ footer{
       </div>
       <div class="flavor-accent"></div>
     </div>
+
   </div>
 </section>
 
@@ -621,7 +688,7 @@ footer{
 <section class="social">
   <div style="max-width:1200px;margin:0 auto;" class="reveal">
     <p class="section-tag">Early Feedback</p>
-    <h2 class="section-title">WHAT<br><span class="ghost">ATHLETES SAY</span></h2>
+    <h2 class="section-title">WHAT<br><span class="ghost">RUNNERS SAY</span></h2>
   </div>
   <div style="max-width:1200px;margin:0 auto;">
     <div class="social-grid">
@@ -694,7 +761,7 @@ footer{
 </section>
 
 
-<!-- ══ FOOTER ══ -->
+<!-- ══ FOOTER — FIXED: proper structure ══ -->
 <footer>
   <div class="footer-logo">ZO<span>N</span>E 2</div>
   <nav class="footer-nav">
