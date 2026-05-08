@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZONE 2 — Energy Chews</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #060606;
+      --white: #f2f0eb;
+      --gray: #111111;
+      --mid: #1e1e1e;
+      --dim: #6a6a6a;
+      --blue: #3B6BF5;
+      --blue-light: #5a85ff;
+      --green: #a8d933;
+      --yellow: #f5b942;
+      --red: #e04a3a;
+      --cream: #f0e8d5;
+      --font-d: 'Bebas Neue', sans-serif;
+      --font-b: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-b);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    #cursor {
+      width: 10px; height: 10px;
+      background: var(--blue); border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      mix-blend-mode: screen;
+    }
+    #cring {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(59,107,245,.4); border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+    }
+
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035; pointer-events: none; z-index: 8000;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.3rem 3rem;
+      transition: background .4s, backdrop-filter .4s;
+    }
+    nav.scrolled { background: rgba(6,6,6,.88); backdrop-filter: blur(14px); border-bottom: 1px solid #191919; }
+
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    /* LOGO SLOT — swap the dashed box for <img src="logo.png" style="height:36px;width:auto"> */
+    .logo-slot {
+      width: 36px; height: 36px;
+      border: 1.5px dashed var(--blue); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; letter-spacing: .1em; color: var(--blue);
+      text-transform: uppercase; background: rgba(59,107,245,.06);
+    }
+    .logo-text { font-family: var(--font-d); font-size: 1.7rem; letter-spacing: .1em; }
+    .logo-text span { color: var(--blue); }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: var(--dim); text-decoration: none; font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      font-size: .72rem; letter-spacing: .15em; text-transform: uppercase;
+      padding: .55rem 1.4rem; border: 1px solid var(--blue); color: var(--blue);
+      background: transparent; cursor: none; font-family: var(--font-b); transition: background .2s, color .2s;
+    }
+    .nav-cta:hover { background: var(--blue); color: var(--white); }
+
+    /* HERO */
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; }
+
+    .hero-bg { position: absolute; inset: 0; overflow: hidden; background: #0a0a0a; }
+    /* BG IMAGE — currently uses your uploaded runner photo; swap src to any other image */
+    .hero-bg-img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(100%) contrast(1.15) brightness(.5);
+      transform: scale(1.05);
+      animation: bgDrift 20s ease-in-out infinite alternate;
+    }
+    @keyframes bgDrift { from { transform: scale(1.05) translateX(0); } to { transform: scale(1.05) translateX(-20px); } }
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        linear-gradient(to right, rgba(6,6,6,.97) 0%, rgba(6,6,6,.8) 50%, rgba(6,6,6,.3) 100%),
+        linear-gradient(to top, rgba(6,6,6,.7) 0%, transparent 40%);
+    }
+    .hero-blue-glow {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 68% 40%, rgba(59,107,245,.09) 0%, transparent 58%);
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 2; padding: 0 3rem; max-width: 660px; }
+    .hero-eyebrow { font-size: .68rem; letter-spacing: .32em; text-transform: uppercase; color: var(--blue); margin-bottom: 1.4rem; opacity: 0; animation: fadeUp .8s .3s forwards; }
+    .hero-title { font-family: var(--font-d); font-size: clamp(4.5rem, 11vw, 9.5rem); line-height: .9; letter-spacing: .015em; opacity: 0; animation: fadeUp .8s .5s forwards; }
+    .hero-title .outline { color: transparent; -webkit-text-stroke: 1.5px var(--white); }
+    .hero-title .blue { color: var(--blue); }
+    .hero-sub { margin-top: 2rem; font-size: .98rem; color: var(--dim); max-width: 400px; line-height: 1.75; opacity: 0; animation: fadeUp .8s .7s forwards; }
+    .hero-sub strong { color: var(--white); font-weight: 500; }
+    .hero-actions { margin-top: 2.8rem; display: flex; gap: 1.2rem; align-items: center; opacity: 0; animation: fadeUp .8s .9s forwards; }
+    .btn-primary { display: inline-block; padding: .95rem 2.4rem; background: var(--blue); color: var(--white); font-family: var(--font-d); font-size: 1.05rem; letter-spacing: .12em; text-decoration: none; cursor: none; transition: background .2s, transform .2s; }
+    .btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); }
+    .btn-ghost { font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); text-decoration: none; display: flex; align-items: center; gap: .5rem; cursor: none; transition: color .2s; }
+    .btn-ghost:hover { color: var(--white); }
+
+    .hero-gummies { position: absolute; right: 4%; top: 50%; transform: translateY(-50%); z-index: 3; width: clamp(260px, 36vw, 480px); opacity: 0; animation: fadeIn 1.2s 1s forwards; }
+    .hero-gummies img { width: 100%; filter: drop-shadow(0 30px 80px rgba(59,107,245,.2)) drop-shadow(0 0 60px rgba(245,185,66,.1)); }
+
+    /* TICKER */
+    .ticker { background: var(--blue); color: var(--white); padding: .75rem 0; overflow: hidden; white-space: nowrap; }
+    .ticker-inner { display: inline-flex; animation: tick 22s linear infinite; }
+    .ticker-item { font-family: var(--font-d); font-size: .92rem; letter-spacing: .15em; padding: 0 2.5rem; }
+    .ticker-dot { color: rgba(255,255,255,.3); padding: 0 .2rem; }
+    @keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: #161616; border-top: 1px solid #161616; border-bottom: 1px solid #161616; }
+    .stat-item { background: var(--black); padding: 3rem 2.5rem; position: relative; overflow: hidden; }
+    .stat-item::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--blue); transition: height .7s ease; }
+    .stat-item.visible::before { height: 100%; }
+    .stat-num { font-family: var(--font-d); font-size: clamp(3rem, 5vw, 4.8rem); line-height: 1; }
+    .stat-num span { color: var(--blue); }
+    .stat-unit { color: var(--dim); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; margin-top: .5rem; }
+    .stat-desc { margin-top: .9rem; font-size: .83rem; color: #4a4a4a; max-width: 200px; line-height: 1.55; }
+
+    /* LIFESTYLE BAND */
+    .lifestyle { padding: 5rem 3rem; }
+    .lifestyle-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 1.5rem; max-width: 1280px; margin: 0 auto; }
+    .ls-card { position: relative; overflow: hidden; cursor: none; }
+    .ls-card:nth-child(1) { aspect-ratio: 2/3; }
+    .ls-card:nth-child(2), .ls-card:nth-child(3) { aspect-ratio: 3/4; }
+
+    /* IMAGE PLACEHOLDER — remove and replace with <img> tag */
+    .img-ph {
+      width: 100%; height: 100%; min-height: 280px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      border: 1.5px dashed #252525; background: #0d0d0d;
+      color: #2e2e2e; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; text-align: center; padding: 1rem;
+      transition: border-color .3s, color .3s;
+    }
+    .ls-card:hover .img-ph { border-color: var(--blue); color: var(--blue); }
+    .ls-card img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.1) brightness(.65); transition: filter .5s, transform .5s; display: block; }
+    .ls-card:hover img { filter: grayscale(50%) contrast(1.1) brightness(.75); transform: scale(1.04); }
+    .ls-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,6,6,.9) 0%, transparent 55%); pointer-events: none; }
+    .ls-label { position: absolute; bottom: 1.5rem; left: 1.5rem; font-family: var(--font-d); font-size: 1.4rem; letter-spacing: .08em; }
+    .ls-label span { color: var(--blue); }
+    .ls-bar { position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--blue); transition: height .5s ease; }
+    .ls-card:hover .ls-bar { height: 100%; }
+
+    /* SECTIONS SHARED */
+    .section-tag { font-size: .67rem; letter-spacing: .3em; text-transform: uppercase; color: var(--blue); margin-bottom: 1.2rem; }
+    .section-title { font-family: var(--font-d); font-size: clamp(2.8rem, 4.5vw, 4.5rem); line-height: .93; }
+    .section-title .outline { color: transparent; -webkit-text-stroke: 1px var(--white); }
+    .section-body { margin-top: 1.5rem; color: var(--dim); font-size: .88rem; line-height: 1.8; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* PRODUCT */
+    .product-wrap { padding: 8rem 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .compare-list { margin-top: 2.5rem; }
+    .compare-item { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #141414; font-size: .82rem; }
+    .compare-item:first-child { border-top: 1px solid #141414; }
+    .ci-bad { color: #383838; }
+    .ci-vs { font-size: .58rem; letter-spacing: .2em; color: #252525; text-transform: uppercase; }
+    .ci-good { color: var(--blue); text-align: right; font-weight: 500; }
+    .product-visual { position: relative; display: flex; justify-content: center; }
+    .product-visual img { width: 85%; filter: drop-shadow(0 30px 80px rgba(59,107,245,.15)); transition: transform .5s; }
+    .product-visual:hover img { transform: scale(1.04) rotate(-1.5deg); }
+    .glow-ring { position: absolute; width: 70%; height: 70%; border-radius: 50%; background: radial-gradient(circle, rgba(59,107,245,.07) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+    .product-badge { position: absolute; top: .5rem; right: 6%; background: var(--blue); color: var(--white); font-family: var(--font-d); font-size: 1rem; letter-spacing: .1em; padding: .45rem .95rem; }
+
+    /* FLAVORS */
+    .flavors-wrap { padding: 8rem 3rem; border-top: 1px solid #0e0e0e; }
+    .flavors-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .flavors-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .flavor-card { background: var(--gray); padding: 2.5rem; border: 1px solid #1a1a1a; position: relative; overflow: hidden; cursor: none; transition: transform .3s, border-color .3s; }
+    .flavor-card:hover { transform: translateY(-6px); border-color: #2a2a2a; }
+    .flavor-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; transition: height .3s; }
+    .flavor-card:hover::after { height: 5px; }
+    .fc-mango::after { background: var(--yellow); }
+    .fc-lychee::after { background: var(--cream); }
+    .fc-berry::after { background: var(--red); }
+    /* FLAVOR IMAGE SLOT — replace .fc-img-ph with an actual <img> */
+    .fc-img-ph { width: 100%; height: 130px; border: 1px dashed #222; background: #0e0e0e; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: #282828; margin-bottom: 1.5rem; transition: border-color .3s, color .3s; }
+    .flavor-card:hover .fc-img-ph { border-color: #333; color: #3a3a3a; }
+    .fc-dot { width: 38px; height: 38px; border-radius: 50%; margin-bottom: 1.1rem; }
+    .fc-mango .fc-dot  { background: var(--yellow); box-shadow: 0 0 20px rgba(245,185,66,.3); }
+    .fc-lychee .fc-dot { background: var(--cream);  box-shadow: 0 0 20px rgba(240,232,213,.2); }
+    .fc-berry .fc-dot  { background: var(--red);    box-shadow: 0 0 20px rgba(224,74,58,.3); }
+    .fc-name { font-family: var(--font-d); font-size: 1.9rem; letter-spacing: .06em; margin-bottom: .4rem; }
+    .fc-desc { color: var(--dim); font-size: .82rem; line-height: 1.6; }
+    .fc-tag { margin-top: 1.3rem; display: inline-block; font-size: .6rem; letter-spacing: .18em; text-transform: uppercase; padding: .28rem .8rem; border: 1px solid #222; color: #3a3a3a; }
+
+    /* HOW IT WORKS */
+    .how-wrap { padding: 8rem 3rem; border-top: 1px solid #0e0e0e; max-width: 1200px; margin: 0 auto; }
+    .steps { margin-top: 5rem; display: grid; grid-template-columns: repeat(4,1fr); gap: 3rem; }
+    .step { position: relative; }
+    .step-num { font-family: var(--font-d); font-size: 4.5rem; line-height: 1; color: #161616; transition: color .3s; }
+    .step:hover .step-num { color: var(--blue); }
+    .step-title { font-weight: 500; margin-top: .8rem; font-size: .93rem; letter-spacing: .04em; }
+    .step-body { margin-top: .6rem; font-size: .81rem; color: var(--dim); line-height: 1.7; }
+    .step-line { position: absolute; top: 2.2rem; right: -1.5rem; width: 3rem; height: 1px; background: #1e1e1e; }
+    .step:last-child .step-line { display: none; }
+
+    /* FOR WHO */
+    .for-wrap { padding: 8rem 3rem; background: var(--gray); border-top: 1px solid #0e0e0e; }
+    .for-inner { max-width: 1200px; margin: 0 auto; }
+    .for-grid { margin-top: 4rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: #1e1e1e; }
+    .for-item { background: var(--gray); padding: 3rem 2.5rem; transition: background .3s; }
+    .for-item:hover { background: #141414; }
+    /* ATHLETE IMAGE SLOT */
+    .for-img-ph { width: 100%; height: 170px; border: 1px dashed #1e1e1e; background: #0e0e0e; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: #262626; margin-bottom: 1.5rem; transition: border-color .3s, color .3s; }
+    .for-item:hover .for-img-ph { border-color: var(--blue); color: var(--blue); }
+    .for-name { font-family: var(--font-d); font-size: 1.5rem; letter-spacing: .06em; margin-bottom: .4rem; }
+    .for-name span { color: var(--blue); }
+    .for-desc { color: var(--dim); font-size: .81rem; line-height: 1.6; }
+
+    /* SOCIAL PROOF */
+    .social-wrap { padding: 8rem 3rem; border-top: 1px solid #0e0e0e; }
+    .social-inner { max-width: 1200px; margin: 0 auto; }
+    .social-grid { margin-top: 4rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .social-card { background: var(--gray); border: 1px solid #1a1a1a; padding: 2rem; }
+    /* SOCIAL IMAGE SLOT */
+    .social-img-ph { width: 100%; height: 190px; border: 1px dashed #1c1c1c; background: #0d0d0d; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: #252525; margin-bottom: 1.5rem; }
+    .social-quote { font-size: .88rem; color: var(--dim); line-height: 1.7; font-style: italic; }
+    .social-author { margin-top: 1.2rem; display: flex; align-items: center; gap: .8rem; }
+    .social-avatar { width: 34px; height: 34px; border-radius: 50%; background: #1a1a1a; border: 1px dashed #2e2e2e; display: flex; align-items: center; justify-content: center; font-size: .58rem; color: #333; }
+    .social-name { font-size: .8rem; font-weight: 500; }
+    .social-handle { font-size: .7rem; color: var(--dim); }
+    .social-tag { display: inline-block; margin-top: .8rem; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; padding: .28rem .8rem; background: rgba(59,107,245,.08); color: var(--blue); border: 1px solid rgba(59,107,245,.2); }
+
+    /* CTA */
+    .cta-wrap { padding: 10rem 3rem; text-align: center; position: relative; overflow: hidden; border-top: 1px solid #0e0e0e; }
+    .cta-wrap::before { content: 'ZONE 2'; position: absolute; font-family: var(--font-d); font-size: 28vw; color: transparent; -webkit-text-stroke: 1px #0e0e0e; top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; white-space: nowrap; letter-spacing: .05em; }
+    .cta-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    /* CTA BG IMAGE — replace img src with your background photo */
+    .cta-bg-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.1) brightness(.28); }
+    .cta-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(6,6,6,.88) 0%, rgba(6,6,6,.6) 50%, rgba(6,6,6,.92) 100%); }
+    .cta-inner { position: relative; z-index: 2; }
+    .cta-tag { font-size: .67rem; letter-spacing: .3em; text-transform: uppercase; color: var(--blue); margin-bottom: 1.5rem; }
+    .cta-title { font-family: var(--font-d); font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: .95; }
+    .cta-title span { color: var(--blue); }
+    .cta-sub { margin: 2rem auto; max-width: 420px; color: var(--dim); font-size: .88rem; line-height: 1.7; }
+    .cta-form { margin-top: 2.5rem; display: flex; justify-content: center; }
+    .cta-input { padding: 1rem 1.4rem; background: #111; border: 1px solid #252525; border-right: none; color: var(--white); font-family: var(--font-b); font-size: .88rem; width: 300px; outline: none; }
+    .cta-input::placeholder { color: #353535; }
+    .cta-input:focus { border-color: var(--blue); }
+    .cta-submit { padding: 1rem 2rem; background: var(--blue); color: var(--white); border: none; font-family: var(--font-d); font-size: .95rem; letter-spacing: .12em; cursor: none; transition: background .2s; }
+    .cta-submit:hover { background: var(--blue-light); }
+    #form-msg { margin-top: .8rem; font-size: .76rem; color: var(--blue); opacity: 0; transition: opacity .4s; }
+
+    /* FOOTER */
+    footer { padding: 2.5rem 3rem; border-top: 1px solid #111; display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-family: var(--font-d); font-size: 1.2rem; letter-spacing: .15em; }
+    .footer-logo span { color: var(--blue); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: #333; text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy { font-size: .68rem; color: #282828; letter-spacing: .06em; }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+
+    @media (max-width: 960px) {
+      nav { padding: 1.1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero-content { padding: 0 1.5rem; }
+      .hero-gummies { display: none; }
+      .stats { grid-template-columns: 1fr; }
+      .lifestyle { padding: 3rem 1.5rem; }
+      .lifestyle-grid { grid-template-columns: 1fr; }
+      .product-wrap { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 1.5rem; }
+      .flavors-wrap, .social-wrap { padding: 5rem 1.5rem; }
+      .flavors-grid, .social-grid { grid-template-columns: 1fr; }
+      .how-wrap { padding: 5rem 1.5rem; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .for-wrap { padding: 5rem 1.5rem; }
+      .for-grid { grid-template-columns: 1fr; }
+      .cta-wrap { padding: 6rem 1.5rem; }
+      .cta-form { flex-direction: column; align-items: center; }
+      .cta-input { width: 100%; max-width: 320px; border-right: 1px solid #252525; border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="logo-wrap">
+    <!--
+      LOGO: Replace the .logo-slot div with:
+      <img src="logo.png" style="height:36px;width:auto" alt="ZONE 2" />
+    -->
+    <div class="logo-slot">LOGO</div>
+    <div class="logo-text">ZO<span>N</span>E 2</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#product">Product</a></li>
+    <li><a href="#flavors">Flavors</a></li>
+    <li><a href="#how">Protocol</a></li>
+    <li><a href="#for">Athletes</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('notify').scrollIntoView({behavior:'smooth'})">Early Access</button>
+</nav>
+
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <!--
+      HERO BACKGROUND IMAGE:
+      Currently uses your uploaded motion-blur runner photo.
+      To change: update the src attribute below.
+      CSS applies grayscale + low brightness automatically.
+    -->
+    <img class="hero-bg-img" src="1778226352166_image.png" alt="" />
+  </div>
+  <div class="hero-blue-glow"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">⚡ Engineered for Movement</p>
+    <h1 class="hero-title">
+      FUEL<br>
+      <span class="blue">IN</span><br>
+      <span class="outline">MOTION</span>
+    </h1>
+    <p class="hero-sub">
+      Energy chews built for the road, the track, and everything in between.
+      <strong>No gels. No bottles. No mess.</strong>
+    </p>
+    <div class="hero-actions">
+      <a href="#notify" class="btn-primary">GET EARLY ACCESS</a>
+      <a href="#product" class="btn-ghost">
+        See Product
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Product poster floated right -->
+  <div class="hero-gummies">
+    <img src="Zone_2_Poster.png" alt="ZONE 2 Energy Chews" />
+  </div>
+</section>
+
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">20G CARBS <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">280MG ELECTROLYTES <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">60MG CAFFEINE <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">BERRY · MANGO · LYCHEE <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">HEAT STABLE 40°C+ <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">DITCH THE GEL <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">BUILT FOR INDIA <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">20G CARBS <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">280MG ELECTROLYTES <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">60MG CAFFEINE <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">BERRY · MANGO · LYCHEE <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">HEAT STABLE 40°C+ <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">DITCH THE GEL <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">BUILT FOR INDIA <span class="ticker-dot">◆</span></span>
+  </div>
+</div>
+
+
+<!-- STATS -->
+<section class="stats" id="stats">
+  <div class="stat-item">
+    <div class="stat-num">20<span>g</span></div>
+    <div class="stat-unit">Fast Carbohydrates</div>
+    <div class="stat-desc">Dual-pathway maltodextrin + fructose for sustained energy without spikes.</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">280<span>mg</span></div>
+    <div class="stat-unit">Electrolytes</div>
+    <div class="stat-desc">Sodium, potassium, magnesium — exactly what you lose when you push hard.</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">60<span>mg</span></div>
+    <div class="stat-unit">Caffeine</div>
+    <div class="stat-desc">Clean anhydrous caffeine. Sharp focus, no jitters, no crash.</div>
+  </div>
+</section>
+
+
+<!-- LIFESTYLE BAND -->
+<section class="lifestyle">
+  <div class="lifestyle-grid">
+    <!--
+      LIFESTYLE IMAGES (3 slots):
+      Replace each .img-ph div with an <img> tag.
+      Recommended: motion-blur running, gym/weights, product in hand.
+      CSS auto-applies grayscale filter.
+      Example:
+        <img src="runner1.jpg" alt="Runner" style="width:100%;height:100%;object-fit:cover" />
+    -->
+    <div class="ls-card reveal">
+      <div class="ls-bar"></div>
+      <div class="img-ph">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-6 4 6"/><circle cx="8.5" cy="13.5" r="1.5"/></svg>
+        Photo 1<br>Running / Motion Blur
+      </div>
+      <div class="ls-overlay"></div>
+      <div class="ls-label">RUN<br><span>HARDER</span></div>
+    </div>
+    <div class="ls-card reveal">
+      <div class="ls-bar"></div>
+      <div class="img-ph">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-6 4 6"/><circle cx="8.5" cy="13.5" r="1.5"/></svg>
+        Photo 2<br>Gym / Athlete Training
+      </div>
+      <div class="ls-overlay"></div>
+      <div class="ls-label">TRAIN<br><span>SMARTER</span></div>
+    </div>
+    <div class="ls-card reveal">
+      <div class="ls-bar"></div>
+      <div class="img-ph">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-6 4 6"/><circle cx="8.5" cy="13.5" r="1.5"/></svg>
+        Photo 3<br>Product in Hand / Outdoor
+      </div>
+      <div class="ls-overlay"></div>
+      <div class="ls-label">FUEL<br><span>BETTER</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PRODUCT -->
+<section id="product" style="border-top: 1px solid #0e0e0e;">
+  <div class="product-wrap">
+    <div class="reveal">
+      <p class="section-tag">Why ZONE 2</p>
+      <h2 class="section-title">BETTER THAN<br><span class="outline">EVERYTHING ELSE</span></h2>
+      <p class="section-body">Energy gels are sticky, messy, hard to stomach at pace. Sports drinks are heavy and inconvenient. ZONE 2 delivers the same performance fuel in a format actually built for movement.</p>
+      <div class="compare-list">
+        <div class="compare-item"><span class="ci-bad">Sticky, watery texture</span><span class="ci-vs">vs</span><span class="ci-good">Clean chewable gummy ✓</span></div>
+        <div class="compare-item"><span class="ci-bad">Spills in your pocket</span><span class="ci-vs">vs</span><span class="ci-good">Tear-open pouch ✓</span></div>
+        <div class="compare-item"><span class="ci-bad">Needs water to take</span><span class="ci-vs">vs</span><span class="ci-good">No water needed ✓</span></div>
+        <div class="compare-item"><span class="ci-bad">Gut discomfort at pace</span><span class="ci-vs">vs</span><span class="ci-good">Easy to digest ✓</span></div>
+        <div class="compare-item"><span class="ci-bad">Melts in Indian heat</span><span class="ci-vs">vs</span><span class="ci-good">Stable above 40°C ✓</span></div>
+      </div>
+    </div>
+    <div class="product-visual reveal">
+      <div class="glow-ring"></div>
+      <div class="product-badge">67g PACK</div>
+      <!--
+        PRODUCT IMAGE:
+        Currently using your uploaded packaging mockup.
+        Replace src with your actual product photo.
+      -->
+      <img src="eal__1_.png" alt="ZONE 2 Energy Chews Packaging" />
+    </div>
+  </div>
+</section>
+
+
+<!-- FLAVORS -->
+<section class="flavors-wrap" id="flavors">
+  <div class="flavors-header reveal">
+    <div>
+      <p class="section-tag">Three Flavors</p>
+      <h2 class="section-title">PICK YOUR<br><span class="outline">FUEL</span></h2>
+    </div>
+    <p style="color:var(--dim);max-width:250px;font-size:.82rem;line-height:1.7">Same formula. Different fuel for different runs.</p>
+  </div>
+  <div class="flavors-grid">
+    <div class="flavor-card fc-mango reveal">
+      <!--
+        FLAVOR IMAGE SLOT: Replace .fc-img-ph with:
+        <img src="mango-gummy.jpg" style="width:100%;height:130px;object-fit:cover;margin-bottom:1.5rem" />
+      -->
+      <div class="fc-img-ph">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+        Mango gummy photo
+      </div>
+      <div class="fc-dot"></div>
+      <div class="fc-name">MANGO</div>
+      <p class="fc-desc">Bright, tropical, clean. Makes you forget you're 8km in.</p>
+      <span class="fc-tag">Most Popular</span>
+    </div>
+    <div class="flavor-card fc-lychee reveal">
+      <div class="fc-img-ph">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+        Lychee gummy photo
+      </div>
+      <div class="fc-dot"></div>
+      <div class="fc-name">LYCHEE</div>
+      <p class="fc-desc">Light, floral, refreshing. Zero heaviness when you're mid-effort.</p>
+      <span class="fc-tag">Smooth Finish</span>
+    </div>
+    <div class="flavor-card fc-berry reveal">
+      <div class="fc-img-ph">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+        Berry gummy photo
+      </div>
+      <div class="fc-dot"></div>
+      <div class="fc-name">BERRY</div>
+      <p class="fc-desc">Bold, tart, intense. The hit you need pushing through the last mile.</p>
+      <span class="fc-tag">High Intensity</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="how-wrap" id="how">
+  <div class="reveal">
+    <p class="section-tag">Protocol</p>
+    <h2 class="section-title">HOW TO<br><span class="outline">USE IT</span></h2>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">01</div><div class="step-line"></div>
+      <div class="step-title">Pre-Run</div>
+      <p class="step-body">1–2 gummies 15 minutes before you start. Prime your energy system before you lace up.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div><div class="step-line"></div>
+      <div class="step-title">Mid-Run</div>
+      <p class="step-body">Every 45 minutes on longer runs. Tear the pack, pop a gummy, keep moving — no water needed.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div><div class="step-line"></div>
+      <div class="step-title">Push Through</div>
+      <p class="step-body">Dual-carb system keeps glucose flowing. Caffeine sharpens focus. Electrolytes replace what you sweat.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">04</div>
+      <div class="step-title">Finish Strong</div>
+      <p class="step-body">No crash. No gut rot. Clean finish — and a reason to go again tomorrow.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOR WHO -->
+<section class="for-wrap" id="for">
+  <div class="for-inner">
+    <div class="reveal">
+      <p class="section-tag">Built For</p>
+      <h2 class="section-title">WHO IT'S<br><span class="outline">FOR</span></h2>
+    </div>
+    <div class="for-grid">
+      <div class="for-item reveal">
+        <!--
+          ATHLETE IMAGE: Replace .for-img-ph with:
+          <img src="runner.jpg" style="width:100%;height:170px;object-fit:cover;filter:grayscale(1);margin-bottom:1.5rem" />
+        -->
+        <div class="for-img-ph">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+          Runner photo
+        </div>
+        <div class="for-name">RUN<span>NERS</span></div>
+        <p class="for-desc">5K to marathon. Run club warriors to solo dawn runners. Built for you first.</p>
+      </div>
+      <div class="for-item reveal">
+        <div class="for-img-ph">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+          Gym / lifting photo
+        </div>
+        <div class="for-name">GYM-<span>GOERS</span></div>
+        <p class="for-desc">Pre-workout, mid-session fuel, fasted cardio. Clean energy without the bloat.</p>
+      </div>
+      <div class="for-item reveal">
+        <div class="for-img-ph">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+          Sport / athlete photo
+        </div>
+        <div class="for-name">ATH<span>LETES</span></div>
+        <p class="for-desc">Football, cycling, tennis, swimming — any sport where staying sharp matters.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SOCIAL PROOF -->
+<section class="social-wrap">
+  <div class="social-inner">
+    <div class="reveal">
+      <p class="section-tag">Early Feedback</p>
+      <h2 class="section-title">WHAT<br><span class="outline">RUNNERS SAY</span></h2>
+    </div>
+    <div class="social-grid">
+      <div class="social-card reveal">
+        <!--
+          SOCIAL IMAGE: Replace .social-img-ph with:
+          <img src="review1.jpg" style="width:100%;height:190px;object-fit:cover;filter:grayscale(1);margin-bottom:1.5rem" />
+          Good options: run club group photo, race day shot, product in action.
+        -->
+        <div class="social-img-ph">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+          Run club / event photo
+        </div>
+        <p class="social-quote">"Finally something that doesn't make me feel sick at 8K. The mango one is unreal."</p>
+        <div class="social-author">
+          <div class="social-avatar">SA</div>
+          <div><div class="social-name">Shreya A.</div><div class="social-handle">Hyderabad Runners Club</div></div>
+        </div>
+        <span class="social-tag">10K Runner</span>
+      </div>
+      <div class="social-card reveal">
+        <div class="social-img-ph">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+          Athlete / race photo
+        </div>
+        <p class="social-quote">"Gels would melt in my pocket in Hyderabad heat. These just work. Every time."</p>
+        <div class="social-author">
+          <div class="social-avatar">RK</div>
+          <div><div class="social-name">Rohan K.</div><div class="social-handle">Half Marathon Runner</div></div>
+        </div>
+        <span class="social-tag">21K Runner</span>
+      </div>
+      <div class="social-card reveal">
+        <div class="social-img-ph">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M3 9l4-4 4 4 4-6 4 6"/></svg>
+          Product use / outdoor
+        </div>
+        <p class="social-quote">"Popped one before a 5am track session. Clean energy, no jitters. This is it."</p>
+        <div class="social-author">
+          <div class="social-avatar">PM</div>
+          <div><div class="social-name">Priya M.</div><div class="social-handle">Track Athlete</div></div>
+        </div>
+        <span class="social-tag">5K Specialist</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-wrap" id="notify">
+  <div class="cta-bg">
+    <!--
+      CTA BACKGROUND IMAGE:
+      Currently using your runner photo. Swap src for a different image if needed.
+    -->
+    <img class="cta-bg-img" src="1778226352166_image.png" alt="" />
+  </div>
+  <div class="cta-inner reveal">
+    <p class="cta-tag">Early Access — Hyderabad</p>
+    <h2 class="cta-title">BE FIRST<br>TO <span>FUEL</span></h2>
+    <p class="cta-sub">ZONE 2 is launching soon. Drop your email and get exclusive early-bird pricing before we go live.</p>
+    <div class="cta-form">
+      <input class="cta-input" type="email" placeholder="your@email.com" id="emailInput" />
+      <button class="cta-submit" onclick="handleSubmit()">NOTIFY ME</button>
+    </div>
+    <p id="form-msg"></p>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ZO<span>N</span>E 2</div>
+  <div class="footer-links">
+    <a href="#product">Product</a>
+    <a href="#flavors">Flavors</a>
+    <a href="#notify">Early Access</a>
+  </div>
+  <p class="footer-copy">© 2025 ZONE 2 — HYDERABAD, INDIA</p>
+</footer>
+
+
+<script>
+  const cur = document.getElementById('cursor');
+  const crg = document.getElementById('cring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    cur.style.left=mx+'px'; cur.style.top=my+'px';
+  });
+  (function loop(){ rx+=(mx-rx)*.1; ry+=(my-ry)*.1; crg.style.left=rx+'px'; crg.style.top=ry+'px'; requestAnimationFrame(loop); })();
+
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+
+  const obs=new IntersectionObserver(entries=>{ entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);} }); },{threshold:.12});
+  document.querySelectorAll('.reveal,.stat-item').forEach(el=>obs.observe(el));
+
+  window.addEventListener('scroll',()=>{ const gf=document.querySelector('.hero-gummies'); if(gf) gf.style.transform=`translateY(calc(-50% + ${scrollY*.1}px))`; });
+
+  function handleSubmit(){
+    const val=document.getElementById('emailInput').value;
+    const msg=document.getElementById('form-msg');
+    if(!val||!val.includes('@')){ msg.style.color='#e04a3a'; msg.textContent='Please enter a valid email.'; }
+    else { msg.style.color='var(--blue)'; msg.textContent="You're in. We'll reach out before launch 🎉"; document.getElementById('emailInput').value=''; }
+    msg.style.opacity='1'; setTimeout(()=>msg.style.opacity='0',4500);
+  }
+</script>
+</body>
+</html>
