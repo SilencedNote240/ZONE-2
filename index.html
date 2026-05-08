@@ -13,7 +13,6 @@
 
 :root{
   --lime:#c8f135;
-  --lime-dim:rgba(200,241,53,.15);
   --white:#f4f2ed;
   --off:#b8b4ab;
   --black:#080807;
@@ -34,7 +33,7 @@ body{
   cursor:none;
 }
 
-/* GRAIN OVERLAY */
+/* GRAIN */
 body::before{
   content:'';position:fixed;inset:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
@@ -52,12 +51,11 @@ body::before{
   position:fixed;top:0;left:0;pointer-events:none;z-index:9998;
   transform:translate(-50%,-50%);transition:transform .06s linear;
 }
-body:hover #cur{transform:translate(-50%,-50%) scale(1);}
 
-/* ─── NAV ─── */
+/* ─── NAV — logo only, centered ─── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:500;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;justify-content:center;
   padding:1.4rem 3rem;
   transition:background .4s,backdrop-filter .4s;
 }
@@ -66,38 +64,9 @@ nav.scrolled{
   backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
 }
-.nav-logo{
-  font-family:var(--font-d);font-size:1.6rem;font-weight:900;
-  letter-spacing:.12em;display:flex;align-items:center;gap:.4rem;
-}
-/* ── LOGO IMAGE SLOT ──
-   Replace <div class="logo-img-slot"> with:
-   <img src="your-logo.png" style="height:32px;width:auto" alt="ZONE 2"/>
-   and remove the fallback text span inside it.
-*/
-.logo-img-slot{
-  height:32px;width:auto;display:flex;align-items:center;
-}
-.logo-img-slot img{height:32px;width:auto;display:block;}
-
-.nav-links{display:flex;gap:2.8rem;list-style:none;}
-.nav-links a{
-  color:var(--off);text-decoration:none;
-  font-family:var(--font-d);font-size:.82rem;font-weight:600;
-  letter-spacing:.22em;text-transform:uppercase;
-  transition:color .2s;
-}
-.nav-links a:hover{color:var(--white);}
-.nav-pill{
-  font-family:var(--font-d);font-size:.75rem;font-weight:700;
-  letter-spacing:.18em;text-transform:uppercase;
-  padding:.5rem 1.5rem;
-  background:var(--lime);color:var(--black);
-  border:none;cursor:none;
-  transition:background .2s,transform .15s;
-  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
-}
-.nav-pill:hover{background:#d9ff42;transform:translateY(-1px);}
+.nav-logo{display:flex;align-items:center;}
+.logo-img-slot{height:36px;width:auto;display:flex;align-items:center;}
+.logo-img-slot img{height:36px;width:auto;display:block;}
 
 /* ─── HERO ─── */
 .hero{
@@ -105,25 +74,21 @@ nav.scrolled{
   display:flex;align-items:flex-end;
   overflow:hidden;
 }
-
-/* ── HERO BG IMAGE SLOT ──
-   The <img class="hero-bg-img"> below uses your runner photo.
-   Replace src="1778226352166_image.png" with any photo.
-   CSS auto-applies grayscale + contrast. 
-*/
 .hero-bg{position:absolute;inset:0;}
 .hero-bg-img{
   width:100%;height:100%;object-fit:cover;object-position:center top;
-  filter:grayscale(100%) contrast(1.2) brightness(.45);
+  /* MORE VISIBLE: brightness raised from .45 → .65, less grayscale */
+  filter:grayscale(75%) contrast(1.1) brightness(.65);
   transform:scale(1.04);
   animation:bgdrift 18s ease-in-out infinite alternate;
 }
 @keyframes bgdrift{from{transform:scale(1.04) translateX(0);}to{transform:scale(1.04) translateX(-14px);}}
 .hero-bg::after{
   content:'';position:absolute;inset:0;
+  /* Lighter gradient so photo shows through */
   background:
-    linear-gradient(to top, rgba(8,8,7,1) 0%, rgba(8,8,7,.7) 30%, rgba(8,8,7,.1) 70%),
-    linear-gradient(to right, rgba(8,8,7,.5) 0%, transparent 60%);
+    linear-gradient(to top, rgba(8,8,7,.95) 0%, rgba(8,8,7,.45) 25%, rgba(8,8,7,.0) 60%),
+    linear-gradient(to right, rgba(8,8,7,.4) 0%, transparent 55%);
 }
 
 .hero-content{
@@ -138,33 +103,22 @@ nav.scrolled{
   color:var(--lime);margin-bottom:1.6rem;
   opacity:0;animation:fadeup .7s .3s forwards;
 }
-.hero-eyebrow::before{
-  content:'';display:block;width:30px;height:1px;background:var(--lime);
-}
+.hero-eyebrow::before{content:'';display:block;width:30px;height:1px;background:var(--lime);}
 .hero-title{
   font-family:var(--font-d);font-size:clamp(5rem,13vw,11rem);
   font-weight:900;line-height:.88;letter-spacing:-.01em;
   text-transform:uppercase;
   opacity:0;animation:fadeup .8s .5s forwards;
 }
-.hero-title .ghost{
-  color:transparent;
-  -webkit-text-stroke:1.5px rgba(244,242,237,.25);
-}
-.hero-title .accent{color:var(--lime);}
+.hero-title .ghost{color:transparent;-webkit-text-stroke:1.5px rgba(244,242,237,.25);}
 .hero-sub{
   margin-top:2rem;
   display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;
   opacity:0;animation:fadeup .8s .75s forwards;
-  max-width:620px;
+  max-width:580px;
 }
-.hero-sub-line{
-  width:1px;background:var(--border);
-  margin-top:.3rem;align-self:stretch;
-}
-.hero-sub-text{
-  font-size:.95rem;color:var(--off);line-height:1.75;
-}
+.hero-sub-line{width:1px;background:var(--border);margin-top:.3rem;align-self:stretch;}
+.hero-sub-text{font-size:.95rem;color:var(--off);line-height:1.75;}
 .hero-sub-text strong{color:var(--white);font-weight:500;}
 .hero-actions{
   margin-top:2.5rem;display:flex;gap:1.4rem;align-items:center;
@@ -185,103 +139,49 @@ nav.scrolled{
   font-family:var(--font-d);font-size:.78rem;font-weight:600;
   letter-spacing:.2em;text-transform:uppercase;
   color:var(--off);text-decoration:none;cursor:none;
-  display:flex;align-items:center;gap:.6rem;
-  transition:color .2s;
+  display:flex;align-items:center;gap:.6rem;transition:color .2s;
 }
 .btn-text:hover{color:var(--white);}
 .btn-text svg{transition:transform .2s;}
 .btn-text:hover svg{transform:translateX(4px);}
 
 /* ─── TICKER ─── */
-.ticker{
-  position:relative;overflow:hidden;
-  padding:.8rem 0;
-  background:var(--lime);
-  border-top:none;
-}
-.ticker-track{
-  display:inline-flex;white-space:nowrap;
-  animation:tick 25s linear infinite;
-}
+.ticker{overflow:hidden;padding:.8rem 0;background:var(--lime);}
+.ticker-track{display:inline-flex;white-space:nowrap;animation:tick 25s linear infinite;}
 .ticker-item{
   font-family:var(--font-d);font-size:.92rem;font-weight:700;
   letter-spacing:.18em;text-transform:uppercase;
   color:var(--black);padding:0 2.2rem;
 }
-.ticker-sep{color:rgba(0,0,0,.3);padding:0 .3rem;}
 @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-/* ─── STATS BAR ─── */
-.stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  border-bottom:1px solid var(--border);
-}
-.stat{
-  padding:3.5rem 3rem;
-  border-right:1px solid var(--border);
-  position:relative;overflow:hidden;
-}
+/* ─── STATS ─── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);}
+.stat{padding:3.5rem 3rem;border-right:1px solid var(--border);position:relative;overflow:hidden;}
 .stat:last-child{border-right:none;}
-.stat-num{
-  font-family:var(--font-d);font-size:clamp(3.5rem,5.5vw,5.5rem);
-  font-weight:900;line-height:.9;
-  color:var(--white);
-}
+.stat-num{font-family:var(--font-d);font-size:clamp(3.5rem,5.5vw,5.5rem);font-weight:900;line-height:.9;color:var(--white);}
 .stat-num sup{font-size:.45em;vertical-align:super;color:var(--lime);}
-.stat-label{
-  margin-top:.7rem;
-  font-family:var(--font-d);font-size:.72rem;font-weight:600;
-  letter-spacing:.24em;text-transform:uppercase;color:var(--off);
-}
+.stat-label{margin-top:.7rem;font-family:var(--font-d);font-size:.72rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--off);}
 .stat-body{margin-top:.8rem;font-size:.8rem;color:#555;line-height:1.6;max-width:200px;}
-.stat-bar{
-  position:absolute;bottom:0;left:0;
-  width:0;height:2px;background:var(--lime);
-  transition:width 1.2s cubic-bezier(.22,1,.36,1);
-}
+.stat-bar{position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--lime);transition:width 1.2s cubic-bezier(.22,1,.36,1);}
 .stat.visible .stat-bar{width:100%;}
 
-/* ─── PRODUCT SECTION ─── */
-.product{
-  display:grid;grid-template-columns:1fr 1fr;
-  min-height:80vh;
-  border-bottom:1px solid var(--border);
-}
-.product-left{
-  padding:6rem 3rem;
-  display:flex;flex-direction:column;justify-content:center;
-  border-right:1px solid var(--border);
-}
-.product-right{
-  position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-  background:#0d0d0c;
-}
-
-/* ── PRODUCT IMAGE SLOT ──
-   Currently displays your Zone 2 packaging mockup.
-   Replace src="eal__1_.png" with your updated product photo.
-   The CSS applies a subtle drop shadow automatically.
-*/
+/* ─── PRODUCT ─── */
+.product{display:grid;grid-template-columns:1fr 1fr;min-height:80vh;border-bottom:1px solid var(--border);}
+.product-left{padding:6rem 3rem;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);}
+.product-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0d0d0c;}
 .product-img{
   width:78%;
   filter:drop-shadow(0 40px 80px rgba(200,241,53,.08)) drop-shadow(0 0 40px rgba(0,0,0,.8));
-  transition:transform .6s cubic-bezier(.22,1,.36,1);
-  position:relative;z-index:2;
+  transition:transform .6s cubic-bezier(.22,1,.36,1);position:relative;z-index:2;
 }
 .product-right:hover .product-img{transform:scale(1.04) rotate(-1.5deg);}
-.product-right-bg{
-  position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 50%, rgba(200,241,53,.04) 0%, transparent 70%);
-}
-.product-badge-wrap{
-  position:absolute;top:2rem;right:2rem;z-index:3;
-}
+.product-right-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgba(200,241,53,.04) 0%, transparent 70%);}
+.product-badge-wrap{position:absolute;top:2rem;right:2rem;z-index:3;}
 .product-badge{
   font-family:var(--font-d);font-size:.75rem;font-weight:700;
   letter-spacing:.2em;text-transform:uppercase;
-  padding:.4rem 1rem;
-  border:1px solid var(--lime);color:var(--lime);
+  padding:.4rem 1rem;border:1px solid var(--lime);color:var(--lime);
   background:rgba(200,241,53,.06);
 }
 
@@ -291,51 +191,61 @@ nav.scrolled{
   margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem;
 }
 .section-tag::before{content:'';display:block;width:20px;height:1px;background:var(--lime);}
-.section-title{
-  font-family:var(--font-d);font-size:clamp(3rem,5vw,5rem);
-  font-weight:900;line-height:.9;text-transform:uppercase;
-  letter-spacing:-.01em;
-}
-.section-title .ghost{
-  color:transparent;-webkit-text-stroke:1.2px rgba(244,242,237,.2);
-}
+.section-title{font-family:var(--font-d);font-size:clamp(3rem,5vw,5rem);font-weight:900;line-height:.9;text-transform:uppercase;letter-spacing:-.01em;}
+.section-title .ghost{color:transparent;-webkit-text-stroke:1.2px rgba(244,242,237,.2);}
 .section-body{margin-top:1.4rem;font-size:.88rem;color:var(--off);line-height:1.8;max-width:380px;}
 
 .compare{margin-top:2.8rem;}
 .compare-row{
   display:grid;grid-template-columns:1fr 28px 1fr;
-  gap:.8rem;align-items:center;
-  padding:.9rem 0;
-  border-top:1px solid var(--border);
-  font-size:.8rem;
+  gap:.8rem;align-items:center;padding:.9rem 0;
+  border-top:1px solid var(--border);font-size:.8rem;
 }
 .compare-row:last-child{border-bottom:1px solid var(--border);}
 .c-bad{color:#3a3a38;font-style:italic;}
-.c-vs{
-  font-family:var(--font-d);font-size:.6rem;font-weight:700;
-  letter-spacing:.12em;color:#2a2a28;text-align:center;
-}
+.c-vs{font-family:var(--font-d);font-size:.6rem;font-weight:700;letter-spacing:.12em;color:#2a2a28;text-align:center;}
 .c-good{color:var(--lime);font-weight:500;text-align:right;}
 
-/* ─── FLAVORS ─── */
-.flavors{
-  padding:7rem 3rem;
-  border-bottom:1px solid var(--border);
-}
-.flavors-head{
-  display:flex;justify-content:space-between;align-items:flex-end;
-  margin-bottom:4rem;
-}
+/* ─── FLAVORS — compact with image-first layout ─── */
+.flavors{padding:5rem 3rem;border-bottom:1px solid var(--border);}
+.flavors-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;}
 .flavors-grid{
   display:grid;grid-template-columns:repeat(3,1fr);
   gap:1px;background:var(--border);
 }
 .flavor{
-  background:var(--black);padding:2.8rem 2.4rem;
+  background:var(--black);
   position:relative;overflow:hidden;cursor:none;
   transition:background .3s;
+  display:flex;flex-direction:column;
 }
 .flavor:hover{background:#0e0e0d;}
+
+/* Image container — fixed height, image fills it */
+.flavor-img-wrap{
+  width:100%;height:160px;
+  overflow:hidden;position:relative;flex-shrink:0;
+}
+.flavor-img-wrap img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1) contrast(1.1) brightness(.65);
+  transition:transform .5s cubic-bezier(.22,1,.36,1), filter .4s;
+}
+.flavor:hover .flavor-img-wrap img{
+  transform:scale(1.05);
+  filter:grayscale(.5) contrast(1.1) brightness(.75);
+}
+/* placeholder when no image yet */
+.flavor-img-ph{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:#2a2a28;background:#0a0a09;
+}
+
+/* text below the image */
+.flavor-body{padding:1.4rem 1.8rem 1.8rem;}
+
 .flavor-accent{
   position:absolute;bottom:0;left:0;right:0;
   height:2px;transform:scaleX(0);transform-origin:left;
@@ -346,115 +256,53 @@ nav.scrolled{
 .f-lychee .flavor-accent{background:#e8dfc8;}
 .f-berry .flavor-accent{background:#d94040;}
 
-/* ── FLAVOR IMAGE SLOTS ──
-   Replace each .flavor-img-ph div with an actual <img>:
-   <img src="mango-chew.jpg" style="width:100%;height:120px;object-fit:cover;margin-bottom:1.5rem;filter:grayscale(1) contrast(1.1) brightness(.7)"/>
-*/
-.flavor-img-ph{
-  width:100%;height:120px;
-  border:1px dashed rgba(255,255,255,.07);
-  background:#0a0a09;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
-  color:#2a2a28;margin-bottom:1.8rem;
-  transition:border-color .3s;
-}
-.flavor:hover .flavor-img-ph{border-color:rgba(200,241,53,.15);}
+.flavor-dot{width:22px;height:22px;border-radius:50%;margin-bottom:.9rem;}
+.f-mango .flavor-dot{background:var(--lime);box-shadow:0 0 14px rgba(200,241,53,.3);}
+.f-lychee .flavor-dot{background:#e8dfc8;box-shadow:0 0 14px rgba(232,223,200,.2);}
+.f-berry .flavor-dot{background:#d94040;box-shadow:0 0 14px rgba(217,64,64,.25);}
 
-.flavor-dot{
-  width:32px;height:32px;border-radius:50%;
-  margin-bottom:1.2rem;
-}
-.f-mango .flavor-dot{background:var(--lime);box-shadow:0 0 20px rgba(200,241,53,.25);}
-.f-lychee .flavor-dot{background:#e8dfc8;box-shadow:0 0 20px rgba(232,223,200,.15);}
-.f-berry .flavor-dot{background:#d94040;box-shadow:0 0 20px rgba(217,64,64,.2);}
-.flavor-name{
-  font-family:var(--font-d);font-size:2.2rem;font-weight:900;
-  letter-spacing:.04em;text-transform:uppercase;
-  margin-bottom:.5rem;
-}
-.flavor-desc{font-size:.82rem;color:var(--off);line-height:1.65;}
+.flavor-name{font-family:var(--font-d);font-size:1.6rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.3rem;}
+.flavor-desc{font-size:.78rem;color:var(--off);line-height:1.6;}
 .flavor-pill{
-  margin-top:1.2rem;display:inline-block;
-  font-family:var(--font-d);font-size:.6rem;font-weight:700;
+  margin-top:.9rem;display:inline-block;
+  font-family:var(--font-d);font-size:.58rem;font-weight:700;
   letter-spacing:.18em;text-transform:uppercase;
-  padding:.28rem .9rem;
+  padding:.22rem .8rem;
   border:1px solid rgba(255,255,255,.1);color:#3a3a38;
 }
 
 /* ─── HOW IT WORKS ─── */
-.how{
-  padding:7rem 3rem;
-  border-bottom:1px solid var(--border);
-  max-width:1200px;margin:0 auto;
-}
-.steps{
-  margin-top:4.5rem;
-  display:grid;grid-template-columns:repeat(4,1fr);gap:3rem;
-}
+.how{padding:7rem 3rem;border-bottom:1px solid var(--border);max-width:1200px;margin:0 auto;}
+.steps{margin-top:4.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:3rem;}
 .step{position:relative;}
-.step-num{
-  font-family:var(--font-d);font-size:5rem;font-weight:900;
-  line-height:1;color:#151513;
-  transition:color .4s;
-}
+.step-num{font-family:var(--font-d);font-size:5rem;font-weight:900;line-height:1;color:#151513;transition:color .4s;}
 .step:hover .step-num{color:var(--lime);}
-.step-connector{
-  position:absolute;top:2.4rem;right:-1.5rem;
-  width:3rem;height:1px;
-  background:linear-gradient(to right,rgba(255,255,255,.07),transparent);
-}
+.step-connector{position:absolute;top:2.4rem;right:-1.5rem;width:3rem;height:1px;background:linear-gradient(to right,rgba(255,255,255,.07),transparent);}
 .step:last-child .step-connector{display:none;}
-.step-title{
-  font-family:var(--font-d);font-size:1rem;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;
-  margin-top:.9rem;
-}
+.step-title{font-family:var(--font-d);font-size:1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:.9rem;}
 .step-body{margin-top:.6rem;font-size:.8rem;color:var(--off);line-height:1.7;}
 
-/* ─── SOCIAL PROOF ─── */
-.social{
-  padding:7rem 3rem;
-  background:var(--gray);
-  border-bottom:1px solid var(--border);
-}
-.social-grid{
-  margin-top:4rem;
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--border);
-}
-.s-card{
-  background:var(--gray);padding:2.4rem;
-  position:relative;cursor:none;
-  transition:background .3s;
-}
+/* ─── SOCIAL ─── */
+.social{padding:7rem 3rem;background:var(--gray);border-bottom:1px solid var(--border);}
+.social-grid{margin-top:4rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.s-card{background:var(--gray);padding:2.4rem;cursor:none;transition:background .3s;}
 .s-card:hover{background:#0e0e0d;}
-
-/* ── SOCIAL IMAGE SLOTS ──
-   Replace .s-img-ph with:
-   <img src="review-photo.jpg" style="width:100%;height:170px;object-fit:cover;filter:grayscale(1) brightness(.6);margin-bottom:1.5rem"/>
-*/
 .s-img-ph{
   width:100%;height:170px;
-  border:1px dashed rgba(255,255,255,.06);
-  background:#0c0c0b;
+  border:1px dashed rgba(255,255,255,.06);background:#0c0c0b;
   display:flex;align-items:center;justify-content:center;
   font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
   color:#252523;margin-bottom:1.5rem;
 }
-.s-quote{
-  font-size:.87rem;color:var(--off);line-height:1.75;
-  font-style:italic;
-}
-.s-author{
-  margin-top:1.3rem;display:flex;align-items:center;gap:.9rem;
-}
+/* when you swap in a real image, use this class */
+.s-card-img{width:100%;height:170px;object-fit:cover;filter:grayscale(1) brightness(.6);margin-bottom:1.5rem;display:block;}
+.s-quote{font-size:.87rem;color:var(--off);line-height:1.75;font-style:italic;}
+.s-author{margin-top:1.3rem;display:flex;align-items:center;gap:.9rem;}
 .s-av{
   width:32px;height:32px;border-radius:50%;
   background:#1a1a18;border:1px solid rgba(255,255,255,.08);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-d);font-size:.65rem;font-weight:700;
-  color:#333;letter-spacing:.04em;
+  font-family:var(--font-d);font-size:.65rem;font-weight:700;color:#333;
 }
 .s-name{font-size:.8rem;font-weight:500;}
 .s-handle{font-size:.7rem;color:var(--off);margin-top:.1rem;}
@@ -468,102 +316,59 @@ nav.scrolled{
 }
 
 /* ─── CTA ─── */
-.cta{
-  position:relative;overflow:hidden;
-  min-height:80vh;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;
-}
-
-/* ── CTA BG IMAGE SLOT ──
-   The <img class="cta-bg-img"> uses your runner photo.
-   Swap src to change it. CSS handles grayscale + darkening.
-*/
+.cta{position:relative;overflow:hidden;min-height:80vh;display:flex;align-items:center;justify-content:center;text-align:center;}
 .cta-bg{position:absolute;inset:0;}
 .cta-bg-img{
   width:100%;height:100%;object-fit:cover;object-position:center 30%;
-  filter:grayscale(100%) contrast(1.2) brightness(.3);
+  /* MORE VISIBLE: brightness raised from .3 → .5 */
+  filter:grayscale(75%) contrast(1.1) brightness(.5);
 }
 .cta-bg::after{
   content:'';position:absolute;inset:0;
   background:
-    radial-gradient(ellipse at center, rgba(8,8,7,.3) 0%, rgba(8,8,7,.85) 80%),
-    linear-gradient(to bottom, rgba(8,8,7,.7) 0%, rgba(8,8,7,.4) 50%, rgba(8,8,7,.9) 100%);
+    radial-gradient(ellipse at center, rgba(8,8,7,.15) 0%, rgba(8,8,7,.65) 80%),
+    linear-gradient(to bottom, rgba(8,8,7,.5) 0%, rgba(8,8,7,.2) 50%, rgba(8,8,7,.75) 100%);
 }
 .cta-wordmark{
-  position:absolute;
-  font-family:var(--font-d);font-size:32vw;font-weight:900;
+  position:absolute;font-family:var(--font-d);font-size:32vw;font-weight:900;
   color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.03);
   letter-spacing:.04em;pointer-events:none;white-space:nowrap;
-  top:50%;left:50%;transform:translate(-50%,-50%);
-  z-index:1;
+  top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;
 }
-.cta-inner{
-  position:relative;z-index:2;
-  padding:0 2rem;
-}
+.cta-inner{position:relative;z-index:2;padding:0 2rem;}
 .cta-tag{
   font-family:var(--font-d);font-size:.72rem;font-weight:700;
   letter-spacing:.3em;text-transform:uppercase;color:var(--lime);
   margin-bottom:1.4rem;display:flex;align-items:center;justify-content:center;gap:.8rem;
 }
 .cta-tag::before,.cta-tag::after{content:'';display:block;width:30px;height:1px;background:var(--lime);}
-.cta-title{
-  font-family:var(--font-d);font-size:clamp(4rem,10vw,8.5rem);
-  font-weight:900;line-height:.88;text-transform:uppercase;
-  letter-spacing:-.01em;
-}
+.cta-title{font-family:var(--font-d);font-size:clamp(4rem,10vw,8.5rem);font-weight:900;line-height:.88;text-transform:uppercase;letter-spacing:-.01em;}
 .cta-title .accent{color:var(--lime);}
-.cta-sub{
-  margin:1.8rem auto 0;max-width:380px;
-  font-size:.88rem;color:var(--off);line-height:1.75;
-}
-.cta-form{
-  margin-top:2.5rem;
-  display:flex;justify-content:center;
-  gap:0;
-}
+.cta-sub{margin:1.8rem auto 0;max-width:380px;font-size:.88rem;color:var(--off);line-height:1.75;}
+.cta-form{margin-top:2.5rem;display:flex;justify-content:center;}
 .cta-input{
   padding:.95rem 1.4rem;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.12);border-right:none;
   color:var(--white);font-family:var(--font-b);font-size:.88rem;
-  width:280px;outline:none;
-  transition:border-color .2s;backdrop-filter:blur(8px);
+  width:280px;outline:none;transition:border-color .2s;backdrop-filter:blur(8px);
 }
 .cta-input::placeholder{color:#353532;}
 .cta-input:focus{border-color:rgba(200,241,53,.4);}
 .cta-btn{
-  padding:.95rem 2rem;
-  background:var(--lime);color:var(--black);
+  padding:.95rem 2rem;background:var(--lime);color:var(--black);
   border:none;font-family:var(--font-d);font-size:.92rem;font-weight:700;
-  letter-spacing:.14em;text-transform:uppercase;cursor:none;
-  transition:background .2s;
+  letter-spacing:.14em;text-transform:uppercase;cursor:none;transition:background .2s;
 }
 .cta-btn:hover{background:#d9ff42;}
-.cta-msg{
-  margin-top:.8rem;font-family:var(--font-d);font-size:.78rem;
-  letter-spacing:.08em;color:var(--lime);
-  opacity:0;transition:opacity .4s;
-}
+.cta-msg{margin-top:.8rem;font-family:var(--font-d);font-size:.78rem;letter-spacing:.08em;color:var(--lime);opacity:0;transition:opacity .4s;}
 
 /* ─── FOOTER ─── */
-footer{
-  padding:2.2rem 3rem;
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.footer-logo{
-  font-family:var(--font-d);font-size:1.1rem;font-weight:900;
-  letter-spacing:.14em;
-}
+footer{padding:2.2rem 3rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.footer-logo{font-family:var(--font-d);font-size:1.1rem;font-weight:900;letter-spacing:.14em;}
 .footer-logo span{color:var(--lime);}
 .footer-nav{display:flex;gap:2.2rem;}
-.footer-nav a{
-  font-family:var(--font-d);font-size:.68rem;font-weight:600;
-  letter-spacing:.18em;text-transform:uppercase;
-  color:#2e2e2c;text-decoration:none;transition:color .2s;
-}
+.footer-nav a{font-family:var(--font-d);font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#2e2e2c;text-decoration:none;transition:color .2s;}
 .footer-nav a:hover{color:var(--white);}
 .footer-copy{font-size:.65rem;color:#222220;letter-spacing:.06em;}
 
@@ -577,14 +382,13 @@ footer{
 /* ─── MOBILE ─── */
 @media(max-width:900px){
   nav{padding:1.1rem 1.5rem;}
-  .nav-links{display:none;}
   .hero-content{padding:0 1.5rem 4rem;}
   .stats{grid-template-columns:1fr;}
   .stat{border-right:none;border-bottom:1px solid var(--border);}
   .product{grid-template-columns:1fr;}
   .product-left{padding:5rem 1.5rem;border-right:none;border-bottom:1px solid var(--border);}
   .product-right{min-height:55vw;}
-  .flavors,.social{padding:5rem 1.5rem;}
+  .flavors,.social{padding:4rem 1.5rem;}
   .flavors-grid,.social-grid{grid-template-columns:1fr;}
   .how{padding:5rem 1.5rem;}
   .steps{grid-template-columns:1fr 1fr;gap:2rem;}
@@ -600,36 +404,26 @@ footer{
 <div id="cur"></div>
 <div id="cring"></div>
 
-<!-- ══ NAV ══ -->
+<!-- ══ NAV — logo only, centered ══ -->
 <nav id="nav">
   <div class="nav-logo">
-    <!-- LOGO IMAGE: replace the <img> src below with your logo file.
-         The alt text fallback "ZONE 2" shows if image fails. -->
     <div class="logo-img-slot">
-      <img src="zone2 logo no bg.png" alt="ZONE 2" style="height:32px;width:auto;object-fit:contain;filter:brightness(0) invert(1);"/>
+      <!-- Replace src with your logo filename (no spaces). -->
+      <img src="zone2-logo.png" alt="ZONE 2" style="height:36px;width:auto;object-fit:contain;"/>
     </div>
   </div>
-  <ul class="nav-links">
-    <li><a href="#product">Product</a></li>
-    <li><a href="#flavors">Flavors</a></li>
-    <li><a href="#how">Protocol</a></li>
-  </ul>
-  <button class="nav-pill" onclick="document.getElementById('notify').scrollIntoView({behavior:'smooth'})">Early Access</button>
 </nav>
 
 
 <!-- ══ HERO ══ -->
 <section class="hero">
   <div class="hero-bg">
-    <!-- HERO BG: swap src to any full-bleed action photo.
-         CSS applies grayscale + dark overlay automatically. -->
     <img class="hero-bg-img" src="running.webp" alt=""/>
   </div>
   <div class="hero-content">
     <p class="hero-eyebrow">Engineered for Movement</p>
     <h1 class="hero-title">
-      FUEL<br>
-      IN<br>
+      FUEL<br>IN<br>
       <span class="ghost">MOTION</span>
     </h1>
     <div class="hero-sub">
@@ -655,30 +449,18 @@ footer{
 <!-- ══ TICKER ══ -->
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span class="ticker-item">20G CARBS</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">280MG ELECTROLYTES</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">60MG CAFFEINE</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">BERRY · MANGO · LYCHEE</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">HEAT STABLE 40°C+</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">BUILT FOR INDIA</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">20G CARBS</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">280MG ELECTROLYTES</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">60MG CAFFEINE</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">BERRY · MANGO · LYCHEE</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">HEAT STABLE 40°C+</span>
-    <span class="ticker-item">◆</span>
-    <span class="ticker-item">BUILT FOR INDIA</span>
-    <span class="ticker-item">◆</span>
+    <span class="ticker-item">20G CARBS</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">280MG ELECTROLYTES</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">60MG CAFFEINE</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">BERRY · MANGO · LYCHEE</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">HEAT STABLE 40°C+</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">BUILT FOR INDIA</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">20G CARBS</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">280MG ELECTROLYTES</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">60MG CAFFEINE</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">BERRY · MANGO · LYCHEE</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">HEAT STABLE 40°C+</span><span class="ticker-item">◆</span>
+    <span class="ticker-item">BUILT FOR INDIA</span><span class="ticker-item">◆</span>
   </div>
 </div>
 
@@ -710,14 +492,8 @@ footer{
 <section id="product" class="product">
   <div class="product-left reveal-left">
     <p class="section-tag">Why ZONE 2</p>
-    <h2 class="section-title">
-      BETTER<br>
-      THAN<br>
-      <span class="ghost">ALL OF IT</span>
-    </h2>
-    <p class="section-body">
-      Gels are sticky. Drinks are heavy. ZONE 2 delivers the same performance fuel in a format built for actual movement.
-    </p>
+    <h2 class="section-title">BETTER<br>THAN<br><span class="ghost">ALL OF IT</span></h2>
+    <p class="section-body">Gels are sticky. Drinks are heavy. ZONE 2 delivers the same performance fuel in a format built for actual movement.</p>
     <div class="compare">
       <div class="compare-row"><span class="c-bad">Sticky watery texture</span><span class="c-vs">vs</span><span class="c-good">Clean chewable ✓</span></div>
       <div class="compare-row"><span class="c-bad">Needs water to take</span><span class="c-vs">vs</span><span class="c-good">No water needed ✓</span></div>
@@ -728,9 +504,7 @@ footer{
   <div class="product-right">
     <div class="product-right-bg"></div>
     <div class="product-badge-wrap"><div class="product-badge">67g Pack</div></div>
-    <!-- PRODUCT IMAGE: replace src with your packaging photo.
-         Drop shadow and hover tilt are handled by CSS. -->
-    <img class="product-img reveal" src="zon" alt="ZONE 2 Energy Chews"/>
+    <img class="product-img reveal" src="eal__1_.png" alt="ZONE 2 Energy Chews"/>
   </div>
 </section>
 
@@ -745,35 +519,54 @@ footer{
     <p style="color:var(--off);max-width:220px;font-size:.82rem;line-height:1.7;">Same formula. Different fire.</p>
   </div>
   <div class="flavors-grid">
+
     <div class="flavor f-mango reveal">
-      <!-- MANGO IMAGE: replace .flavor-img-ph with an <img> tag.
-           Recommended: close-up of mango gummy or tropical flat-lay.
-           Apply style="filter:grayscale(1) contrast(1.1) brightness(.65)" -->
-      <img class="f-mango" src="mango.jpg" />
-      <div class="flavor-dot"></div>
-      <div class="flavor-name">Mango</div>
-      <p class="flavor-desc">Bright, tropical, clean. Makes you forget you're 8km in.</p>
-      <span class="flavor-pill">Most Popular</span>
+      <div class="flavor-img-wrap">
+        <!--
+          MANGO IMAGE — two steps:
+          1. Delete the line below: <div class="flavor-img-ph">Mango photo</div>
+          2. Uncomment the <img> line below it and change src to your filename
+        -->
+        <div class="flavor-img-ph">Mango photo</div>
+        <!-- <img src="mango.jpg" alt="Mango"/> -->
+      </div>
+      <div class="flavor-body">
+        <div class="flavor-dot"></div>
+        <div class="flavor-name">Mango</div>
+        <p class="flavor-desc">Bright, tropical, clean. Makes you forget you're 8km in.</p>
+        <span class="flavor-pill">Most Popular</span>
+      </div>
       <div class="flavor-accent"></div>
     </div>
+
     <div class="flavor f-lychee reveal">
-      <!-- LYCHEE IMAGE: light, pale, floral shot works well here -->
-     <img class="f-lychee" src="lychee.jpg" alt=""/>
-      <div class="flavor-dot"></div>
-      <div class="flavor-name">Lychee</div>
-      <p class="flavor-desc">Light, floral, refreshing. Zero heaviness mid-effort.</p>
-      <span class="flavor-pill">Smooth Finish</span>
+      <div class="flavor-img-wrap">
+        <div class="flavor-img-ph">Lychee photo</div>
+        <!-- <img src="lychee.jpg" alt="Lychee"/> -->
+      </div>
+      <div class="flavor-body">
+        <div class="flavor-dot"></div>
+        <div class="flavor-name">Lychee</div>
+        <p class="flavor-desc">Light, floral, refreshing. Zero heaviness mid-effort.</p>
+        <span class="flavor-pill">Smooth Finish</span>
+      </div>
       <div class="flavor-accent"></div>
     </div>
+
     <div class="flavor f-berry reveal">
-      <!-- BERRY IMAGE: dark, moody berry shot fits the "high intensity" angle -->
-      <img class="f-berry" src="berry.jpg" />
-      <div class="flavor-dot"></div>
-      <div class="flavor-name">Berry</div>
-      <p class="flavor-desc">Bold, tart, intense. The hit you need through the last mile.</p>
-      <span class="flavor-pill">High Intensity</span>
+      <div class="flavor-img-wrap">
+        <div class="flavor-img-ph">Berry photo</div>
+        <!-- <img src="berry.jpg" alt="Berry"/> -->
+      </div>
+      <div class="flavor-body">
+        <div class="flavor-dot"></div>
+        <div class="flavor-name">Berry</div>
+        <p class="flavor-desc">Bold, tart, intense. The hit you need through the last mile.</p>
+        <span class="flavor-pill">High Intensity</span>
+      </div>
       <div class="flavor-accent"></div>
     </div>
+
   </div>
 </section>
 
@@ -786,20 +579,17 @@ footer{
   </div>
   <div class="steps">
     <div class="step reveal">
-      <div class="step-num">01</div>
-      <div class="step-connector"></div>
+      <div class="step-num">01</div><div class="step-connector"></div>
       <div class="step-title">Pre-Run</div>
       <p class="step-body">1–2 gummies 15 min before you start. Prime your system before you lace up.</p>
     </div>
     <div class="step reveal">
-      <div class="step-num">02</div>
-      <div class="step-connector"></div>
+      <div class="step-num">02</div><div class="step-connector"></div>
       <div class="step-title">Mid-Run</div>
       <p class="step-body">Every 45 min on longer runs. Tear pack, pop a gummy, keep moving. No water needed.</p>
     </div>
     <div class="step reveal">
-      <div class="step-num">03</div>
-      <div class="step-connector"></div>
+      <div class="step-num">03</div><div class="step-connector"></div>
       <div class="step-title">Push Through</div>
       <p class="step-body">Dual-carb keeps glucose flowing. Caffeine sharpens focus. Electrolytes replace sweat.</p>
     </div>
@@ -814,14 +604,18 @@ footer{
 
 <!-- ══ SOCIAL PROOF ══ -->
 <section class="social">
-  <div style="max-width:1200px;margin:0 auto;padding:0 3rem;" class="reveal">
+  <div style="max-width:1200px;margin:0 auto;" class="reveal">
     <p class="section-tag">Early Feedback</p>
     <h2 class="section-title">WHAT<br><span class="ghost">RUNNERS SAY</span></h2>
   </div>
-  <div style="max-width:1200px;margin:0 auto;padding:0 3rem;">
+  <div style="max-width:1200px;margin:0 auto;">
     <div class="social-grid">
       <div class="s-card reveal">
-        <!-- REVIEW PHOTO: replace .s-img-ph with a run club or race-day photo -->
+        <!--
+          REVIEW PHOTO — two steps:
+          1. Delete the <div class="s-img-ph"> line
+          2. Replace with: <img class="s-card-img" src="review1.jpg" alt=""/>
+        -->
         <div class="s-img-ph">Run club photo</div>
         <p class="s-quote">"Finally something that doesn't make me feel sick at 8K. The mango one is unreal."</p>
         <div class="s-author">
@@ -856,8 +650,6 @@ footer{
 <!-- ══ CTA ══ -->
 <section id="notify" class="cta">
   <div class="cta-bg">
-    <!-- CTA BG: same runner photo — swap src to change.
-         CSS handles darkening + grayscale. -->
     <img class="cta-bg-img" src="endurance.jpg" alt=""/>
   </div>
   <div class="cta-wordmark" aria-hidden="true">Z2</div>
@@ -887,7 +679,6 @@ footer{
 
 
 <script>
-  /* Custom cursor */
   const cur=document.getElementById('cur'),crg=document.getElementById('cring');
   let mx=0,my=0,rx=0,ry=0;
   document.addEventListener('mousemove',e=>{
@@ -900,8 +691,7 @@ footer{
     requestAnimationFrame(loop);
   })();
 
-  /* Cursor grow on interactive elements */
-  document.querySelectorAll('a,button,[class*="flavor"],[class*="s-card"]').forEach(el=>{
+  document.querySelectorAll('a,button,.flavor,.s-card').forEach(el=>{
     el.addEventListener('mouseenter',()=>{
       cur.style.transform='translate(-50%,-50%) scale(2.5)';
       crg.style.transform='translate(-50%,-50%) scale(1.4)';
@@ -912,11 +702,9 @@ footer{
     });
   });
 
-  /* Nav scroll */
   const nav=document.getElementById('nav');
   window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
 
-  /* Reveal on scroll */
   const obs=new IntersectionObserver(entries=>{
     entries.forEach(e=>{
       if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}
@@ -924,13 +712,11 @@ footer{
   },{threshold:.1});
   document.querySelectorAll('.reveal,.reveal-left,.stat').forEach(el=>obs.observe(el));
 
-  /* Hero parallax */
   window.addEventListener('scroll',()=>{
     const bg=document.querySelector('.hero-bg-img');
     if(bg) bg.style.transform=`scale(1.04) translateY(${scrollY*.15}px)`;
   });
 
-  /* Email submit */
   function handleSubmit(){
     const v=document.getElementById('emailInput').value;
     const m=document.getElementById('ctaMsg');
