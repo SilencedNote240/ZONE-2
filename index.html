@@ -70,7 +70,7 @@ body::before{
 .logo-img-slot{height:36px;display:flex;align-items:center;}
 .logo-img{
   height:36px;width:auto;display:block;
-  filter:brightness(10) invert(0);
+
   opacity:1;
 }
 .logo-fallback{
@@ -211,8 +211,8 @@ body::before{
 /* BLUE accent ring behind product image */
 .product-right-ring{
   position:absolute;width:380px;height:380px;border-radius:50%;
-  border:1px solid rgba(75,75,255,.12);
-  box-shadow:0 0 60px rgba(75,75,255,.06);
+  border:1px solid rgb(0, 0, 0);
+  box-shadow:0 0 60px rgba(0, 0, 0, 0);
   z-index:1;
 }
 .product-badge-wrap{position:absolute;top:2rem;right:2rem;z-index:3;}
@@ -479,7 +479,7 @@ footer{
 <nav id="nav">
   <div class="nav-logo">
     <div class="logo-img-slot">
-      <img src="zone2%20logo" alt="ZONE 2" class="logo-img"
+      <img src="zone_2_logo" alt="ZONE 2" class="logo-img"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
       <span class="logo-fallback">ZO<em>N</em>E 2</span>
     </div>
@@ -595,7 +595,7 @@ footer{
     <div class="product-right-ring"></div>
     <div class="product-badge-wrap"><div class="product-badge">67g Pack</div></div>
     <div class="product-img-wrap reveal">
-      <img src="Zone 2 Poster.png" alt="ZONE 2 Energy Chews" class="product-img"/>
+      <img src="zone_2_product.png" alt="ZONE 2 Energy Chews" class="product-img"/>
     </div>
   </div>
 </section>
