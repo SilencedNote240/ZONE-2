@@ -64,15 +64,21 @@ body::before{
 #nav.scrolled{
   background:rgba(8,8,7,.92);
   backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--blue);
+  border-bottom:1px solid var(--border);
 }
 .nav-logo{display:flex;align-items:center;}
-.logo-img-slot{height:36px;width:auto;display:flex;align-items:center;}
-.logo-img-slot img{
+.logo-img-slot{height:36px;display:flex;align-items:center;}
+.logo-img{
   height:36px;width:auto;display:block;
-  filter:brightness(1) contrast(1.1);
+  filter:brightness(10) invert(0);
   opacity:1;
 }
+.logo-fallback{
+  display:none;
+  font-family:var(--font-d);font-size:1.4rem;font-weight:900;
+  letter-spacing:.14em;color:var(--white);
+}
+.logo-fallback em{color:var(--lime);font-style:normal;}
 
 /* ─── HERO ─── */
 .hero{
@@ -173,8 +179,7 @@ body::before{
 .stat{padding:3.5rem 3rem;border-right:1px solid var(--border);position:relative;overflow:hidden;}
 .stat:last-child{border-right:none;}
 /* BLUE accent left border on hover */
-.stat{border-left:2px solid transparent;transition:border-color .4s;}
-.stat:hover{border-left-color:var(--blue);}
+.stat{transition:border-color .4s;}
 .stat-num{font-family:var(--font-d);font-size:clamp(3.5rem,5.5vw,5.5rem);font-weight:900;line-height:.9;color:var(--white);}
 .stat-num sup{font-size:.45em;vertical-align:super;color:var(--lime);}
 .stat-label{margin-top:.7rem;font-family:var(--font-d);font-size:.72rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--off);}
@@ -188,13 +193,20 @@ body::before{
 .product-left{padding:6rem 3rem;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);}
 .product-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0d0d0c;}
 /* FIX: product image — proper display, no broken attributes */
-.product-img{
-  width:78%;max-width:480px;
-  display:block;
-  filter:drop-shadow(0 40px 80px rgba(200,241,53,.08)) drop-shadow(0 0 40px rgba(0,0,0,.8));
-  transition:transform .6s cubic-bezier(.22,1,.36,1);position:relative;z-index:2;
+.product-img-wrap{
+  width:75%;max-width:460px;
+  aspect-ratio:3/4;
+  overflow:hidden;position:relative;z-index:2;
+  border:1px solid rgba(255,255,255,.06);
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
-.product-right:hover .product-img{transform:scale(1.04) rotate(-1.5deg);}
+.product-right:hover .product-img-wrap{transform:scale(1.03) rotate(-1deg);}
+.product-img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  display:block;
+  filter:brightness(.95) contrast(1.05);
+}
 .product-right-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgba(200,241,53,.04) 0%, transparent 70%);}
 /* BLUE accent ring behind product image */
 .product-right-ring{
@@ -306,8 +318,7 @@ body::before{
 .step-num{font-family:var(--font-d);font-size:5rem;font-weight:900;line-height:1;color:#151513;transition:color .4s;}
 .step:hover .step-num{color:var(--blue);}
 /* BLUE accent top border */
-.step{border-top:2px solid transparent;padding-top:1.2rem;transition:border-color .4s;}
-.step:hover{border-top-color:var(--blue);}
+.step{padding-top:1.2rem;transition:border-color .4s;}
 .step-connector{position:absolute;top:2.4rem;right:-1.5rem;width:3rem;height:1px;background:linear-gradient(to right,rgba(255,255,255,.07),transparent);}
 .step:last-child .step-connector{display:none;}
 .step-title{font-family:var(--font-d);font-size:1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:.9rem;}
@@ -316,21 +327,40 @@ body::before{
 /* ─── SOCIAL ─── */
 .social{padding:7rem 3rem;background:var(--gray);border-bottom:1px solid var(--border);}
 .social-grid{margin-top:4rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
-.s-card{background:var(--gray);padding:2.4rem;cursor:none;transition:background .3s, border-color .3s;}
+.s-card{background:var(--gray);padding:0;cursor:none;transition:background .3s, border-color .3s;overflow:hidden;}
 .s-card:hover{background:#0e0e0d;}
-/* BLUE accent on s-card hover left border */
-.s-card{border-left:2px solid transparent;}
-.s-card:hover{border-left-color:var(--blue);}
-.s-img-ph{
-  width:100%;height:170px;
-  border:1px dashed rgba(255,255,255,.06);background:#0c0c0b;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
-  color:#252523;margin-bottom:1.5rem;
+
+
+/* Image container — matches flavor card exactly */
+.s-img-wrap{
+  width:100%;height:160px;
+  overflow:hidden;position:relative;flex-shrink:0;
+  background:#0a0a09;
 }
-.s-card-img{width:100%;height:170px;object-fit:cover;filter:grayscale(1) brightness(.6);margin-bottom:1.5rem;display:block;}
+.s-img-wrap img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1) contrast(1.1) brightness(.65);
+  transition:transform .5s cubic-bezier(.22,1,.36,1), filter .4s;
+}
+.s-card:hover .s-img-wrap img{
+  transform:scale(1.05);
+  filter:grayscale(.5) contrast(1.1) brightness(.75);
+}
+/* Placeholder label shown when image fails */
+.s-img-label{
+  display:none;position:absolute;inset:0;
+  align-items:center;justify-content:center;
+  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#2a2a28;
+}
+.s-img-ph-active .s-img-label{display:flex;}
+/* card body padding applied separately */
+.s-card .s-quote,
+.s-card .s-author,
+.s-card .s-tag{display:block;padding:0 1.8rem;}
+.s-card .s-quote{padding-top:1.4rem;font-size:.87rem;color:var(--off);line-height:1.75;font-style:italic;}
+.s-card .s-tag{padding-bottom:1.6rem;}
 .s-quote{font-size:.87rem;color:var(--off);line-height:1.75;font-style:italic;}
-.s-author{margin-top:1.3rem;display:flex;align-items:center;gap:.9rem;}
+.s-card .s-author{margin-top:1.3rem;display:flex;align-items:center;gap:.9rem;padding-bottom:.4rem;}
 .s-av{
   width:32px;height:32px;border-radius:50%;
   background:#1a1a18;border:1px solid rgba(255,255,255,.08);
@@ -399,7 +429,7 @@ body::before{
 /* ─── FOOTER — FIXED ─── */
 footer{
   padding:2.2rem 3rem;
-  border-top:1px solid var(--blue); /* BLUE accent top border */
+  border-top:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
 }
 .footer-logo{font-family:var(--font-d);font-size:1.1rem;font-weight:900;letter-spacing:.14em;}
@@ -449,8 +479,9 @@ footer{
 <nav id="nav">
   <div class="nav-logo">
     <div class="logo-img-slot">
-      <!-- FIX: logo image — brightness:1, no dimming filter -->
-      <img src="zone2_logo" alt="ZONE 2" style="height:36px;width:auto;object-fit:contain;filter:brightness(1.15) contrast(1.1);opacity:1;"/>
+      <img src="zone_2_logo.png" alt="ZONE 2" class="logo-img"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
+      <span class="logo-fallback">ZO<em>N</em>E 2</span>
     </div>
   </div>
 </nav>
@@ -561,11 +592,11 @@ footer{
   </div>
   <div class="product-right">
     <div class="product-right-bg"></div>
-    <!-- BLUE decorative ring behind product -->
     <div class="product-right-ring"></div>
     <div class="product-badge-wrap"><div class="product-badge">67g Pack</div></div>
-    <!-- FIX: proper img tag syntax, no stray attributes -->
-    <img class="product-img reveal" src="Zone_2_Poster.png" alt="ZONE 2 Energy Chews"/>
+    <div class="product-img-wrap reveal">
+      <img src="zone_2_product.png" alt="ZONE 2 Energy Chews" class="product-img"/>
+    </div>
   </div>
 </section>
 
@@ -583,7 +614,7 @@ footer{
 
     <div class="flavor f-mango reveal">
       <div class="flavor-img-wrap">
-        <img src="mango.jpg" filter:grayscale(1) contrast(1.1) brightness(.65)/>
+        <img src="mango.jpg" alt="Mango"/>
       </div>
       <div class="flavor-body">
         <div class="flavor-dot"></div>
@@ -596,7 +627,7 @@ footer{
 
     <div class="flavor f-lychee reveal">
       <div class="flavor-img-wrap">
-        <img src="lychee.jpg" filter:grayscale(1) contrast(1.1) brightness(.65)/>
+        <img src="lychee.jpg" alt="Lychee"/>
       </div>
       <div class="flavor-body">
         <div class="flavor-dot"></div>
@@ -609,7 +640,7 @@ footer{
 
     <div class="flavor f-berry reveal">
       <div class="flavor-img-wrap">
-        <img src="berry.jpg" filter:grayscale(1) contrast(1.1) brightness(.65)/>
+        <img src="berry.jpg" alt="Berry"/>
       </div>
       <div class="flavor-body">
         <div class="flavor-dot"></div>
@@ -664,31 +695,43 @@ footer{
   <div style="max-width:1200px;margin:0 auto;">
     <div class="social-grid">
       <div class="s-card reveal">
-        <img src="cycle.jpg"/>
+        <div class="s-img-wrap">
+          <img src="cycle.jpg" alt="Run club photo"
+               onerror="this.style.display='none';this.parentElement.classList.add('s-img-ph-active');"/>
+          <span class="s-img-label">Run club photo</span>
+        </div>
         <p class="s-quote">"Finally something that doesn't make me feel sick at 8K. The mango one is unreal."</p>
         <div class="s-author">
           <div class="s-av">SA</div>
           <div><div class="s-name">Shreya A.</div><div class="s-handle">Hyderabad Runners Club</div></div>
         </div>
-        <span class="s-tag">10K Runner</span>
+        <span class="s-tag">250km Cyclist</span>
       </div>
       <div class="s-card reveal">
-       <img src="swim.jpg"/>
+        <div class="s-img-wrap">
+          <img src="swim.jpg" alt="Race day photo"
+               onerror="this.style.display='none';this.parentElement.classList.add('s-img-ph-active');"/>
+          <span class="s-img-label">Race day photo</span>
+        </div>
         <p class="s-quote">"Gels would melt in my pocket in Hyderabad heat. These just work. Every time."</p>
         <div class="s-author">
           <div class="s-av">RK</div>
           <div><div class="s-name">Rohan K.</div><div class="s-handle">Half Marathon Runner</div></div>
         </div>
-        <span class="s-tag">21K Runner</span>
+        <span class="s-tag">National Swimmer</span>
       </div>
       <div class="s-card reveal">
-   <img src="box.jpg"/>
+        <div class="s-img-wrap">
+          <img src="box.jpg" alt="Track photo"
+               onerror="this.style.display='none';this.parentElement.classList.add('s-img-ph-active');"/>
+          <span class="s-img-label">Track / outdoor photo</span>
+        </div>
         <p class="s-quote">"Popped one before a 5am track session. Clean energy, no jitters. This is it."</p>
         <div class="s-author">
           <div class="s-av">PM</div>
           <div><div class="s-name">Priya M.</div><div class="s-handle">Track Athlete</div></div>
         </div>
-        <span class="s-tag">5K Specialist</span>
+        <span class="s-tag">MMA</span>
       </div>
     </div>
   </div>
@@ -716,7 +759,6 @@ footer{
 
 <!-- ══ FOOTER — FIXED: proper structure ══ -->
 <footer>
-  <div class="footer-logo">ZO<span>N</span>E 2</div>
   <nav class="footer-nav">
     <a href="#">Privacy</a>
     <a href="#">Contact</a>
