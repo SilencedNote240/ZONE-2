@@ -76,7 +76,7 @@ body::before{
 .logo-fallback{
   display:none;
   font-family:var(--font-d);font-size:1.4rem;font-weight:900;
-  letter-spacing:.14em;
+  letter-spacing:.14em;color:var(--white);
 }
 .logo-fallback em{color:var(--lime);font-style:normal;}
 
@@ -327,11 +327,15 @@ body::before{
 /* ─── SOCIAL ─── */
 .social{padding:7rem 3rem;background:var(--gray);border-bottom:1px solid var(--border);}
 .social-grid{margin-top:4rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
-.s-card{background:var(--gray);padding:0;cursor:none;transition:background .3s, border-color .3s;overflow:hidden;}
+.s-card{
+  background:var(--gray);
+  position:relative;overflow:hidden;cursor:none;
+  transition:background .3s;
+  display:flex;flex-direction:column;
+}
 .s-card:hover{background:#0e0e0d;}
 
-
-/* Image container — matches flavor card exactly */
+/* Image container — identical to flavor-img-wrap */
 .s-img-wrap{
   width:100%;height:160px;
   overflow:hidden;position:relative;flex-shrink:0;
@@ -346,21 +350,17 @@ body::before{
   transform:scale(1.05);
   filter:grayscale(.5) contrast(1.1) brightness(.75);
 }
-/* Placeholder label shown when image fails */
 .s-img-label{
   display:none;position:absolute;inset:0;
   align-items:center;justify-content:center;
   font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#2a2a28;
 }
 .s-img-ph-active .s-img-label{display:flex;}
-/* card body padding applied separately */
-.s-card .s-quote,
-.s-card .s-author,
-.s-card .s-tag{display:block;padding:0 1.8rem;}
-.s-card .s-quote{padding-top:1.4rem;font-size:.87rem;color:var(--off);line-height:1.75;font-style:italic;}
-.s-card .s-tag{padding-bottom:1.6rem;}
-.s-quote{font-size:.87rem;color:var(--off);line-height:1.75;font-style:italic;}
-.s-card .s-author{margin-top:1.3rem;display:flex;align-items:center;gap:.9rem;padding-bottom:.4rem;}
+
+/* Body — identical to flavor-body */
+.s-body{padding:1.4rem 1.8rem 1.8rem;}
+.s-quote{font-size:.82rem;color:var(--off);line-height:1.75;font-style:italic;margin-bottom:.9rem;}
+.s-author{margin-top:1rem;display:flex;align-items:center;gap:.9rem;}
 .s-av{
   width:32px;height:32px;border-radius:50%;
   background:#1a1a18;border:1px solid rgba(255,255,255,.08);
@@ -479,7 +479,7 @@ footer{
 <nav id="nav">
   <div class="nav-logo">
     <div class="logo-img-slot">
-      <img src="zone_2_logo.png" alt="ZONE 2" class="logo-img"
+      <img src="zone2%20logo" alt="ZONE 2" class="logo-img"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
       <span class="logo-fallback">ZO<em>N</em>E 2</span>
     </div>
@@ -595,7 +595,7 @@ footer{
     <div class="product-right-ring"></div>
     <div class="product-badge-wrap"><div class="product-badge">67g Pack</div></div>
     <div class="product-img-wrap reveal">
-      <img src="zone_2_product.png" alt="ZONE 2 Energy Chews" class="product-img"/>
+      <img src="Zone 2 Poster.png" alt="ZONE 2 Energy Chews" class="product-img"/>
     </div>
   </div>
 </section>
@@ -696,34 +696,49 @@ footer{
     <div class="social-grid">
       <div class="s-card reveal">
         <div class="s-img-wrap">
-          <img src="cycle.jpg" alt="Run club photo"
+          <img src="cycle.jpg" alt="Cyclist"
                onerror="this.style.display='none';this.parentElement.classList.add('s-img-ph-active');"/>
-          <span class="s-img-label">Run club photo</span>
+          <span class="s-img-label">Cyclist photo</span>
         </div>
-        <p class="s-quote">"Finally something that doesn't make me feel sick on long rides. The mango one is unreal."</p>
-        <div class="s-author">
-          <div class="s-av">SA</div>
-          <div><div class="s-name">Shreya A.</div><div class="s-handle">Cyclist</div></div>
+        <div class="s-body">
+          <p class="s-quote">"Finally something that doesn't make me feel sick on long rides. The mango one is unreal."</p>
+          <div class="s-author">
+            <div class="s-av">SA</div>
+            <div><div class="s-name">Shreya A.</div><div class="s-handle">Cyclist</div></div>
+          </div>
+          <span class="s-tag">Cyclist</span>
+        </div>
+      </div>
       <div class="s-card reveal">
         <div class="s-img-wrap">
-          <img src="swim.jpg" alt="Race day photo"
+          <img src="swim.jpg" alt="Swimmer"
                onerror="this.style.display='none';this.parentElement.classList.add('s-img-ph-active');"/>
-          <span class="s-img-label">Race day photo</span>
+          <span class="s-img-label">Swim session photo</span>
         </div>
-        <p class="s-quote">"These are just the perfect composition of energy, its a routine now before any swim session"</p>
-        <div class="s-author">
-          <div class="s-av">RK</div>
-          <div><div class="s-name">Rohan K.</div><div class="s-handle">National Swim Team</div></div>
+        <div class="s-body">
+          <p class="s-quote">"These are just the perfect composition of energy, it's a routine now before any swim session."</p>
+          <div class="s-author">
+            <div class="s-av">RK</div>
+            <div><div class="s-name">Rohan K.</div><div class="s-handle">National Swim Team</div></div>
+          </div>
+          <span class="s-tag">Swimmer</span>
+        </div>
+      </div>
       <div class="s-card reveal">
         <div class="s-img-wrap">
-          <img src="box.jpg" alt="Track photo"
+          <img src="box.jpg" alt="Boxing"
                onerror="this.style.display='none';this.parentElement.classList.add('s-img-ph-active');"/>
-          <span class="s-img-label">Track / outdoor photo</span>
+          <span class="s-img-label">Boxing photo</span>
         </div>
-        <p class="s-quote">"Popped one before a 5am Box session. Clean energy, no jitters. This is it."</p>
-        <div class="s-author">
-          <div class="s-av">PM</div>
-          <div><div class="s-name">Priya M.</div><div class="s-handle">MMA</div></div>
+        <div class="s-body">
+          <p class="s-quote">"Popped one before a 5am box session. Clean energy, no jitters. This is it."</p>
+          <div class="s-author">
+            <div class="s-av">PM</div>
+            <div><div class="s-name">Priya M.</div><div class="s-handle">MMA</div></div>
+          </div>
+          <span class="s-tag">MMA Fighter</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -750,6 +765,7 @@ footer{
 
 <!-- ══ FOOTER — FIXED: proper structure ══ -->
 <footer>
+  <div class="footer-logo">ZO<span>N</span>E 2</div>
   <nav class="footer-nav">
     <a href="#">Privacy</a>
     <a href="#">Contact</a>
