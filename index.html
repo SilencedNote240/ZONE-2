@@ -76,7 +76,7 @@ body::before{
 .logo-fallback{
   display:none;
   font-family:var(--font-d);font-size:1.4rem;font-weight:900;
-  letter-spacing:.14em;color:var(--white);
+  letter-spacing:.14em;
 }
 .logo-fallback em{color:var(--lime);font-style:normal;}
 
@@ -479,7 +479,8 @@ footer{
 <nav id="nav">
   <div class="nav-logo">
     <div class="logo-img-slot">
-      <img src="zone_2_logo.png"/>
+      <img src="zone_2_logo.png" alt="ZONE 2" class="logo-img"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
       <span class="logo-fallback">ZO<em>N</em>E 2</span>
     </div>
   </div>
