@@ -103,8 +103,11 @@ input[type=range]{width:100%;margin:1rem 0 1.6rem;accent-color:#fcf4ee;height:28
 /* flavours */
 .flavours{padding:6rem 0}
 .flavours .grid{margin-top:3rem;display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;max-width:820px}
-.fl{border-radius:32px;overflow:hidden;background:#fff;transition:transform .3s}
-.fl:hover{transform:translateY(-6px)}
+.fl{--accent:var(--forest);border:2.5px solid var(--accent);border-radius:32px;overflow:hidden;background:#fff;transition:transform .3s,box-shadow .3s}
+.fl.blue{--accent:#4338ff}
+.fl.red{--accent:#e0001a}
+.fl:hover{transform:translateY(-6px);box-shadow:0 10px 0 -4px var(--accent)}
+.fl .tag{background:var(--accent)}
 .fl .slot{border-radius:0;border:0;padding:0;background:none}
 .fl .slot:not(:has(img)){aspect-ratio:4/3;padding:1rem}   /* placeholder box only when no image */
 .fl .slot img{position:static;display:block;width:100%;height:auto;object-fit:contain}
@@ -258,11 +261,11 @@ footer a:hover{opacity:1}
   <div class="wrap">
     <h2>Pick your flavour.</h2>
     <div class="grid">
-      <article class="fl">
+      <article class="fl blue">
         <div class="slot"><span>Blueberry pack</span><img src="images/pack-blueberry.png" alt="Blueberry gummies" onerror="this.remove()"/></div>
         <div class="b"><h3>Blueberry</h3><p>Pack of 6, 65 kcal a serving.</p><span class="tag">Available at launch</span></div>
       </article>
-      <article class="fl">
+      <article class="fl red">
         <div class="slot"><span>Cola pack</span><img src="images/pack-cola.png" alt="Cola gummies" onerror="this.remove()"/></div>
         <div class="b"><h3>Cola</h3><p>Same 2:1 formula, different flavour.</p><span class="tag">Available at launch</span></div>
       </article>
